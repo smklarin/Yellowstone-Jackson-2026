@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1713" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="YJ Trip" />
+  <link rel="apple-touch-icon" href="icon-180.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.7.1/dist/maplibre-gl.css" />
+  <title>Yellowstone + Jackson 2026</title>
+  <style>
+    :root{
+      --bg:#07100d; --panel:#0d1915; --panel2:#11221b; --card:#12231d;
+      --text:#f2f5f1; --muted:#9fb1a8; --line:#24382f; --green:#6fc59c;
+      --gold:#e1b85b; --blue:#62a8ff; --yellow:#f2c94c; --red:#ef6d6d; --gray:#9aa5a0;
+      --purple:#b99cff; --v2:#65aaf7; --v3:#71d09e; --safe:env(safe-area-inset-bottom,0px);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    body{min-height:100vh}
+    button,select,input{font:inherit}
+    button{cursor:pointer}
+    .app{max-width:980px;margin:0 auto;min-height:100vh;background:linear-gradient(180deg,#09140f 0,#07100d 28rem)}
+    .header{position:sticky;top:0;z-index:30;background:rgba(7,16,13,.88);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.07);padding:12px 14px 10px}
+    .eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:800}
+    .titleRow{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:4px}
+    h1{font-size:21px;line-height:1.05;margin:0;font-weight:850;letter-spacing:-.03em}
+    .dates{font-size:12px;color:var(--muted);white-space:nowrap}
+    .planRow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:11px}
+    select,.btn,.iconBtn,.seg button,.chip{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:12px;min-height:42px}
+    select{width:100%;padding:0 34px 0 12px;font-weight:750}
+    .btn{padding:0 14px;font-weight:750}
+    .btn.primary{background:var(--green);color:#06110d;border-color:transparent}
+    .btn.ghost{background:transparent}
+    .btn.small{min-height:36px;padding:0 11px;font-size:13px}
+    .btn.warn{background:#302914;border-color:#594b1f;color:#ffe5a5}
+    .main{padding:12px 12px 92px}
+    .view{display:none}.view.active{display:block}
+    .hero{display:grid;grid-template-columns:1.45fr .8fr;gap:10px;margin-bottom:12px}
+    .card{background:rgba(18,35,29,.94);border:1px solid var(--line);border-radius:18px;padding:14px;min-width:0}
+    .card h2,.card h3{margin:0}
+    .card h2{font-size:19px;letter-spacing:-.02em}.card h3{font-size:15px}
+    .muted{color:var(--muted)}
+    .tiny{font-size:11px}.smallText{font-size:13px}
+    .statusRow{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
+    .status{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border:1px solid var(--line);border-radius:999px;font-size:12px;background:#0b1713}
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--gray);flex:0 0 auto}.dot.good{background:var(--green)}.dot.warn{background:var(--yellow)}.dot.bad{background:var(--red)}.dot.blue{background:var(--blue)}
+    .nextTitle{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+    .nextName{font-size:24px;font-weight:850;letter-spacing:-.04em;margin-top:3px}
+    .timeBig{font-size:30px;font-weight:900;letter-spacing:-.04em;margin-top:6px;color:var(--gold)}
+    .deadline{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--line);font-size:13px}.deadline:first-of-type{margin-top:9px}
+    .dayBar{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin:4px 0 12px;scrollbar-width:none}.dayBar::-webkit-scrollbar{display:none}
+    .dayBtn{min-width:76px;background:#0d1915;border:1px solid var(--line);color:var(--muted);padding:9px 10px;border-radius:13px;font-weight:750}.dayBtn.active{background:var(--text);color:#09110e;border-color:var(--text)}
+    .sectionTitle{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:17px 2px 9px}.sectionTitle h2{font-size:17px;margin:0}.sectionTitle span{font-size:12px;color:var(--muted)}
+    .timeline{display:grid;gap:8px}
+    .event{display:grid;grid-template-columns:68px 18px minmax(0,1fr);gap:8px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:15px;padding:11px}
+    .eventTime{font-size:12px;color:var(--gold);font-weight:800;padding-top:3px}.eventRail{display:flex;justify-content:center}.eventRail span{width:11px;height:11px;margin-top:4px;border-radius:50%;border:2px solid var(--green);background:#0e1a16}.event.done{opacity:.55}.event.done .eventRail span{background:var(--green)}
+    .eventName{font-size:14px;font-weight:800}.eventMeta{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.35}.tag{display:inline-block;margin-top:6px;margin-right:4px;border-radius:999px;border:1px solid var(--line);padding:3px 7px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}.tag.must{color:#baf2d5}.tag.high{color:#c7dcff}.tag.optional{color:#d3d3cf}.tag.fixed{color:#ffe3a2}
+    .eventActions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.linkBtn{border:1px solid var(--line);background:#0c1814;color:var(--text);padding:7px 9px;border-radius:9px;font-size:11px;font-weight:700;text-decoration:none}.doneBtn.doneState{background:var(--green);color:#07110d}
+    #map{height:54vh;min-height:390px;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#0c1613}
+    .mapWrap{position:relative}.mapTop{position:absolute;z-index:8;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}.mapTop>*{pointer-events:auto}
+    .mapPill{background:rgba(7,16,13,.9);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:12px;padding:8px 10px;font-size:12px;color:var(--text)}
+    .mapTools{display:flex;gap:6px}.mapTools button{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:rgba(7,16,13,.92);color:var(--text);font-size:18px}
+    .gpsMarker{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:3px solid #fff;box-shadow:0 2px 12px rgba(0,0,0,.45);background:var(--blue);transition:background .2s}.gpsMarker::after{content:'▲';font-size:11px;color:white;transform:translateY(-1px)}.gpsMarker.stale{background:var(--yellow)}.gpsMarker.lost{background:var(--gray)}
+    .mapLegend{display:flex;gap:8px;flex-wrap:wrap;margin:8px 2px 0;color:var(--muted);font-size:11px}.legendLine{display:inline-block;width:22px;height:4px;border-radius:10px;margin-right:5px;vertical-align:middle}.legendDot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+    .mapNotice{margin-top:8px;font-size:11px;color:var(--muted);line-height:1.35}
+    .stopSheet{margin-top:10px;display:none}.stopSheet.show{display:block}.sheetHead{display:flex;justify-content:space-between;gap:10px;align-items:start}.sheetName{font-size:18px;font-weight:850}.sheetActions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+    .overviewGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}.planCard{position:relative;overflow:hidden}.planCard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px}.planCard.v2::before{background:var(--v2)}.planCard.v3::before{background:var(--v3)}.planName{font-size:17px;font-weight:850}.planDesc{font-size:12px;color:var(--muted);line-height:1.4;margin-top:5px}.metric{display:flex;justify-content:space-between;gap:8px;font-size:12px;margin-top:8px}.metric strong{font-size:12px}
+    .compare{width:100%;border-collapse:collapse;font-size:12px}.compare th,.compare td{padding:9px 7px;border-bottom:1px solid var(--line);text-align:left}.compare th:nth-child(n+2),.compare td:nth-child(n+2){text-align:center}.yes{color:var(--green);font-weight:900}.no{color:#657069}.maybe{color:var(--gold);font-weight:800}
+    .seg{display:flex;gap:6px;flex-wrap:wrap}.seg button{min-height:38px;padding:0 11px;color:var(--muted);font-size:12px;font-weight:750}.seg button.active{color:#08110d;background:var(--gold);border-color:transparent}
+    .conditionBanner{display:flex;align-items:start;gap:10px;margin-top:10px;padding:11px;border-radius:13px;background:#1b1d16;border:1px solid #3b3b26}.conditionIcon{font-size:19px}.conditionText strong{font-size:13px}.conditionText p{font-size:12px;color:#c8c5ad;margin:3px 0 0;line-height:1.4}
+    .wildGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.wild{display:flex;align-items:center;gap:10px}.wildEmoji{font-size:28px;width:38px}.wildName{font-size:14px;font-weight:800}.wildCount{font-size:12px;color:var(--muted)}.wild button{margin-left:auto;width:40px;height:40px;border:1px solid var(--line);border-radius:11px;background:#0b1713;color:var(--text);font-size:20px}
+    .logList{display:grid;gap:7px;margin-top:10px}.logItem{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:8px;font-size:12px}.logItem .muted{font-size:11px}
+    .checkList{display:grid;gap:7px}.check{display:flex;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:12px;background:#0d1915}.check input{width:20px;height:20px;accent-color:var(--green)}.check label{font-size:13px;flex:1}.check.done label{text-decoration:line-through;color:var(--muted)}
+    .addRow{display:grid;grid-template-columns:1fr auto;gap:7px;margin-top:9px}.addRow input{min-width:0;background:#0b1713;border:1px solid var(--line);color:var(--text);border-radius:11px;padding:0 11px;min-height:42px;font-size:16px}
+    .infoGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.infoItem{padding:11px;border:1px solid var(--line);border-radius:13px;background:#0d1915}.infoItem .k{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.09em;font-weight:800}.infoItem .v{font-size:14px;font-weight:800;margin-top:4px}.infoItem .s{font-size:11px;color:var(--muted);margin-top:3px}
+    .bottomNav{position:fixed;z-index:40;left:50%;bottom:0;transform:translateX(-50%);width:min(980px,100%);display:grid;grid-template-columns:repeat(5,1fr);background:rgba(7,16,13,.95);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:6px 8px calc(6px + var(--safe))}
+    .navBtn{border:0;background:transparent;color:#84968d;min-height:54px;border-radius:11px;font-size:10px;font-weight:750}.navBtn span{display:block;font-size:20px;line-height:23px}.navBtn.active{color:var(--text);background:#102019}
+    .toast{position:fixed;z-index:99;left:50%;bottom:82px;transform:translateX(-50%) translateY(20px);background:#f3f5f2;color:#09110e;border-radius:12px;padding:10px 14px;font-weight:750;font-size:12px;opacity:0;pointer-events:none;transition:.2s;max-width:90%;text-align:center}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .maplibregl-ctrl-attrib{font-size:9px!important}.maplibregl-popup-content{background:#101f19!important;color:#f2f5f1!important;border-radius:12px!important;border:1px solid #2a4035;padding:10px!important}.maplibregl-popup-tip{border-top-color:#101f19!important;border-bottom-color:#101f19!important}
+    @media(max-width:700px){.hero,.overviewGrid,.infoGrid{grid-template-columns:1fr}.hero .card:nth-child(2){display:none}.main{padding-left:10px;padding-right:10px}.header{padding-left:12px;padding-right:12px}#map{height:50vh;min-height:360px}.wildGrid{grid-template-columns:1fr}.event{grid-template-columns:60px 16px minmax(0,1fr)}}
+    @media(min-width:701px){#map{height:590px}.bottomNav{border-left:1px solid var(--line);border-right:1px solid var(--line)}}
+  </style>
+</head>
+<body>
+<div class="app" id="app">
+  <header class="header">
+    <div class="eyebrow">Yellowstone + Jackson</div>
+    <div class="titleRow"><h1>Trip Companion</h1><div class="dates">Sep 23–27, 2026</div></div>
+    <div class="planRow">
+      <select id="planSelect" aria-label="Selected itinerary">
+        <option value="v2">V2 — Grand Prismatic</option>
+        <option value="v3" selected>V3 — Northern Wildlife</option>
+        <option value="v4">V4 — Flexible Conditions</option>
+      </select>
+      <button class="btn" id="overviewBtn" type="button">Overview</button>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="view active" id="dashboardView">
+      <div class="dayBar" id="dayBar"></div>
+      <div class="hero">
+        <div class="card">
+          <div class="nextTitle" id="modeLabel">Preview • Thursday</div>
+          <div class="nextName" id="nextName">Lamar Valley wildlife</div>
+          <div class="timeBig" id="nextTime">7:00 AM</div>
+          <div class="smallText muted" id="nextMeta">Primary wildlife window • linger if activity is good</div>
+          <div class="statusRow">
+            <span class="status"><span class="dot" id="gpsDot"></span><span id="gpsText">GPS not started</span></span>
+            <span class="status"><span class="dot" id="networkDot"></span><span id="networkText">Checking network</span></span>
+            <span class="status"><span class="dot good"></span><span id="syncText">App data cached</span></span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="nextTitle">Hard deadlines</div>
+          <div id="deadlineList"></div>
+        </div>
+      </div>
+
+      <div class="sectionTitle"><h2 id="dayTitle">Thursday · Northern Yellowstone</h2><span id="daySubtitle">Wildlife first</span></div>
+      <div class="timeline" id="timeline"></div>
+    </section>
+
+    <section class="view" id="mapView">
+      <div class="dayBar" id="mapDayBar"></div>
+      <div class="mapWrap">
+        <div class="mapTop">
+          <div class="mapPill" id="mapRouteLabel">V3 · Thu route</div>
+          <div class="mapTools">
+            <button id="locateBtn" type="button" title="Use current location" aria-label="Use current location">⌖</button>
+            <button id="fitBtn" type="button" title="Fit route" aria-label="Fit route">↙</button>
+          </div>
+        </div>
+        <div id="map" aria-label="Trip route map"></div>
+      </div>
+      <div class="mapLegend" id="mapLegend">
+        <span><span class="legendLine" style="background:var(--v3)"></span>Selected route</span>
+        <span><span class="legendDot" style="background:var(--blue)"></span>Live GPS</span>
+        <span><span class="legendDot" style="background:var(--yellow)"></span>Stale GPS</span>
+        <span><span class="legendDot" style="background:var(--gray)"></span>Last known</span>
+      </div>
+      <div class="mapNotice">Route is a trip-planning aid, not turn-by-turn navigation. Yellowstone NPS cautions that consumer navigation can route visitors onto closed or unsuitable roads; check official road conditions before driving.</div>
+      <div class="card stopSheet" id="stopSheet"></div>
+    </section>
+
+    <section class="view" id="overviewView">
+      <div class="sectionTitle"><h2>Yellowstone plan overview</h2><span>V2 vs V3 only</span></div>
+      <div class="overviewGrid">
+        <div class="card planCard v2"><div class="planName">V2 · Grand Prismatic</div><div class="planDesc">Wildlife morning plus the iconic geothermal overlook. More cross-park movement and a firmer Thursday clock.</div><div class="metric"><span>Lamar target</span><strong>~3 hours</strong></div><div class="metric"><span>Thursday feel</span><strong>Balanced</strong></div><button class="btn small ghost planJump" data-plan="v2" type="button" style="margin-top:10px">Use V2</button></div>
+        <div class="card planCard v3"><div class="planName">V3 · Northern Wildlife</div><div class="planDesc">Keeps the day concentrated in the northern range so excellent wildlife sightings can win over the schedule.</div><div class="metric"><span>Lamar target</span><strong>3½–4+ hours</strong></div><div class="metric"><span>Thursday feel</span><strong>Flexible</strong></div><button class="btn small ghost planJump" data-plan="v3" type="button" style="margin-top:10px">Use V3</button></div>
+      </div>
+      <div class="mapWrap"><div id="overviewMap" style="height:460px;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#0c1613"></div></div>
+      <div class="mapLegend"><span><span class="legendLine" style="background:var(--v2)"></span>V2</span><span><span class="legendLine" style="background:var(--v3)"></span>V3</span><span><span class="legendDot" style="background:var(--gold)"></span>Shared Friday: Hayden Valley</span></div>
+      <div class="card" style="margin-top:10px;overflow-x:auto">
+        <table class="compare">
+          <thead><tr><th>Destination / area</th><th>V2</th><th>V3</th></tr></thead>
+          <tbody>
+            <tr><td>Slough Creek / Lamar / Soda Butte</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+            <tr><td>Tower area</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+            <tr><td>Mammoth</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+            <tr><td>Grand Prismatic</td><td class="yes">✓</td><td class="no">—</td></tr>
+            <tr><td>Calcite Springs</td><td class="no">—</td><td class="maybe">Optional</td></tr>
+            <tr><td>Wraith / Undine</td><td class="no">—</td><td class="maybe">Optional</td></tr>
+            <tr><td>Hayden Valley Friday</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <button class="btn primary" id="overviewBack" type="button" style="width:100%;margin-top:10px">Back to selected plan</button>
+    </section>
+
+    <section class="view" id="conditionsView">
+      <div class="sectionTitle"><h2>Conditions + V4</h2><span>Manual fallback logic in v1</span></div>
+      <div class="card">
+        <div class="statusRow" style="margin-top:0">
+          <span class="status"><span class="dot" id="condNetworkDot"></span><span id="condNetworkText">Network</span></span>
+          <span class="status"><span class="dot blue"></span><span id="lastRoadSync">Road data: manual check</span></span>
+        </div>
+        <div class="conditionBanner"><div class="conditionIcon">ⓘ</div><div class="conditionText"><strong>V1 does not claim live road/weather data yet.</strong><p>Use the official-condition links below, then choose the matching V4 scenario. Live-data integration can be added after the core app is tested.</p></div></div>
+        <div class="sectionTitle" style="margin-top:14px"><h2 style="font-size:14px">V4 scenario</h2><span>changes fallback route + priorities</span></div>
+        <div class="seg" id="scenarioSeg">
+          <button type="button" data-scenario="normal" class="active">Normal</button>
+          <button type="button" data-scenario="poor">Poor Weather</button>
+          <button type="button" data-scenario="snow">Snow / Ice</button>
+          <button type="button" data-scenario="closure">Road Closure</button>
+          <button type="button" data-scenario="late">Running Late</button>
+        </div>
+        <div class="conditionBanner" id="scenarioAdvice"></div>
+        <div class="eventActions" style="margin-top:12px">
+          <a class="linkBtn" target="_blank" rel="noopener" href="https://www.nps.gov/yell/planyourvisit/parkroads.htm">Yellowstone roads ↗</a>
+          <a class="linkBtn" target="_blank" rel="noopener" href="https://www.nps.gov/grte/planyourvisit/conditions.htm">Grand Teton conditions ↗</a>
+          <a class="linkBtn" target="_blank" rel="noopener" href="https://www.wyoroad.info/">WYDOT roads ↗</a>
+        </div>
+      </div>
+      <div class="card" style="margin-top:10px">
+        <h3>V4 principles</h3>
+        <div class="smallText muted" style="line-height:1.55;margin-top:8px">Protect hard commitments first. Keep Lamar when access and visibility make sense. Use Mammoth as the primary northern fallback hub. Cancel Hayden and Grand Teton bonus stops before risking Friday's wedding timing. Never let the app auto-switch plans without asking you.</div>
+        <button class="btn primary" id="switchV4" type="button" style="margin-top:12px;width:100%">Switch selected itinerary to V4</button>
+      </div>
+    </section>
+
+    <section class="view" id="wildlifeView">
+      <div class="sectionTitle"><h2>Wildlife log</h2><span>saved on this device</span></div>
+      <div class="wildGrid" id="wildGrid"></div>
+      <div class="card" style="margin-top:10px">
+        <h3>Recent sightings</h3>
+        <div class="logList" id="logList"></div>
+      </div>
+    </section>
+
+    <section class="view" id="tripView">
+      <div class="sectionTitle"><h2>Trip info</h2><span>quick reference</span></div>
+      <div class="card">
+        <div class="infoGrid">
+          <div class="infoItem"><div class="k">West Yellowstone</div><div class="v">Gray Wolf Inn & Suites</div><div class="s">Sep 23–25 · 250 S Canyon St</div></div>
+          <div class="infoItem"><div class="k">Teton Village</div><div class="v">Teton Mountain Lodge & Spa</div><div class="s">Sep 25–27 · 3385 Cody Ln</div></div>
+          <div class="infoItem"><div class="k">Friday</div><div class="v">7:15 PM shuttle</div><div class="s">Treat as a hard deadline</div></div>
+          <div class="infoItem"><div class="k">Saturday</div><div class="v">5:00 PM gondola</div><div class="s">Wedding 5:30 PM</div></div>
+          <div class="infoItem"><div class="k">Sunday</div><div class="v">2:01 PM flight</div><div class="s">Target IDA rental return ~12 PM</div></div>
+          <div class="infoItem"><div class="k">Yellowstone gear</div><div class="v">Bushnell PowerView 2</div><div class="s">Binoculars · wildlife priority</div></div>
+        </div>
+      </div>
+      <div class="sectionTitle"><h2>Checklist</h2><span>tap to complete</span></div>
+      <div class="card"><div class="checkList" id="checkList"></div><form class="addRow" id="addCheckForm"><input id="addCheckInput" maxlength="60" placeholder="Add a checklist item…" aria-label="New checklist item"><button class="btn small" type="submit">Add</button></form></div>
+      <div class="sectionTitle"><h2>Offline status</h2><span>PWA shell + viewed map resources</span></div>
+      <div class="card smallText muted" style="line-height:1.55">The itinerary, checklists, wildlife log and fallback route data are stored locally. The service worker caches the app shell and map resources as you use them. A future version can package a dedicated Yellowstone/Grand Teton offline basemap for more complete zero-signal coverage.</div>
+    </section>
+  </main>
+
+  <nav class="bottomNav" aria-label="Primary navigation">
+    <button class="navBtn active" data-view="dashboardView" type="button"><span>◫</span>Today</button>
+    <button class="navBtn" data-view="mapView" type="button"><span>⌖</span>Map</button>
+    <button class="navBtn" data-view="conditionsView" type="button"><span>☁</span>Conditions</button>
+    <button class="navBtn" data-view="wildlifeView" type="button"><span>◉</span>Wildlife</button>
+    <button class="navBtn" data-view="tripView" type="button"><span>☰</span>Trip</button>
+  </nav>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</div>
+
+<script src="https://unpkg.com/maplibre-gl@5.7.1/dist/maplibre-gl.js"></script>
+<script>
+(() => {
+  'use strict';
+  const $ = s => document.querySelector(s);
+  const $$ = s => [...document.querySelectorAll(s)];
+  const STORE = 'yj-trip-v1';
+  const saved = JSON.parse(localStorage.getItem(STORE) || '{}');
+  const state = {
+    plan: saved.plan || 'v3', day: saved.day || 'thu', mapDay: saved.mapDay || 'thu',
+    scenario: saved.scenario || 'normal', done: saved.done || {}, wildlife: saved.wildlife || {},
+    sightings: saved.sightings || [], checks: saved.checks || {}, customChecks: saved.customChecks || [],
+    gps: {watchId:null, lng:null, lat:null, accuracy:null, ts:null, marker:null, status:'off'},
+    activeStop:null, currentView:'dashboardView'
+  };
+  const save = () => localStorage.setItem(STORE, JSON.stringify({plan:state.plan,day:state.day,mapDay:state.mapDay,scenario:state.scenario,done:state.done,wildlife:state.wildlife,sightings:state.sightings,checks:state.checks,customChecks:state.customChecks}));
+  const toast = msg => { const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast.t); toast.t=setTimeout(()=>t.classList.remove('show'),2200); };
+
+  const P = {
+    ida:{name:'Idaho Falls Regional Airport',lng:-112.0708,lat:43.5146,cat:'Travel'},
+    gray:{name:'Gray Wolf Inn & Suites',lng:-111.10002,lat:44.65618,cat:'Hotel'},
+    discovery:{name:'Grizzly & Wolf Discovery Center',lng:-111.1016,lat:44.6566,cat:'Wildlife'},
+    west:{name:'Yellowstone West Entrance',lng:-111.09719,lat:44.65841,cat:'Gateway'},
+    madison:{name:'Madison Junction',lng:-110.86021,lat:44.64577,cat:'Junction'},
+    norris:{name:'Norris Junction',lng:-110.69521,lat:44.73355,cat:'Junction'},
+    canyon:{name:'Canyon Junction',lng:-110.49326,lat:44.73605,cat:'Junction'},
+    tower:{name:'Tower Junction',lng:-110.41687,lat:44.91633,cat:'Junction'},
+    towerFall:{name:'Tower Fall',lng:-110.38615,lat:44.89133,cat:'Scenic'},
+    calcite:{name:'Calcite Springs Overlook',lng:-110.3928,lat:44.9008,cat:'Scenic'},
+    slough:{name:'Slough Creek',lng:-110.30492,lat:44.94938,cat:'Wildlife'},
+    lamar:{name:'Lamar Valley',lng:-110.19527,lat:44.85976,cat:'Wildlife'},
+    soda:{name:'Soda Butte',lng:-110.15222,lat:44.87806,cat:'Wildlife'},
+    mammoth:{name:'Mammoth Hot Springs',lng:-110.70094,lat:44.97633,cat:'Wildlife / thermal'},
+    undine:{name:'Undine Falls',lng:-110.6387,lat:44.9512,cat:'Scenic'},
+    wraith:{name:'Wraith Falls',lng:-110.6127,lat:44.9332,cat:'Short hike'},
+    prismatic:{name:'Grand Prismatic Overlook',lng:-110.8378,lat:44.5251,cat:'Thermal'},
+    hayden:{name:'Hayden Valley',lng:-110.45548,lat:44.64383,cat:'Wildlife'},
+    south:{name:'Yellowstone South Entrance',lng:-110.66468,lat:44.13249,cat:'Gateway'},
+    oxbow:{name:'Oxbow Bend',lng:-110.54759,lat:43.86616,cat:'Wildlife / scenic'},
+    snake:{name:'Snake River Overlook',lng:-110.62376,lat:43.75374,cat:'Scenic'},
+    schwab:{name:'Schwabacher Landing',lng:-110.67059,lat:43.71151,cat:'Scenic / wildlife'},
+    jenny:{name:'Jenny Lake',lng:-110.72205,lat:43.75171,cat:'Hike / scenic'},
+    teton:{name:'Teton Mountain Lodge & Spa',lng:-110.82997,lat:43.58809,cat:'Hotel'},
+    gondola:{name:'Bridger Gondola / Jackson Hole Mountain Resort',lng:-110.8278,lat:43.5887,cat:'Wedding'},
+    islandPark:{name:'Island Park',lng:-111.341,lat:44.421,cat:'Fallback route'},
+    ashton:{name:'Ashton',lng:-111.4483,lat:44.0716,cat:'Fallback route'},
+    driggs:{name:'Driggs',lng:-111.1108,lat:43.7233,cat:'Fallback route'},
+    victor:{name:'Victor',lng:-111.1113,lat:43.6027,cat:'Fallback route'}
+  };
+
+  const E = (id,time,name,place,priority,note,hard=false) => ({id,time,name,place,priority,note,hard});
+  const sharedDays = {
+    wed:[E('w1','1:30 PM','Land at IDA','ida','fixed','Pick up rental car.',true),E('w2','~4:15 PM','Gray Wolf Inn check-in','gray','high','Two-night Yellowstone base.'),E('w3','~4:30 PM','Grizzly & Wolf Discovery Center','discovery','high','Go if flight/rental timing cooperates.'),E('w4','Evening','Dinner + fuel + stage gear',null,'high','Set out layers, binoculars, snacks and morning gear.')],
+    fri:[E('f1','5:15 AM','Depart Gray Wolf Inn','gray','must','Second dawn wildlife day.'),E('f2','~6:40–8:30','Hayden Valley wildlife','hayden','high','Keep flexible; V4 cancels this first if Friday travel becomes uncertain.'),E('f3','Late morning','Oxbow Bend','oxbow','optional','North-to-south Teton sightseeing.'),E('f4','Midday','Snake River Overlook','snake','optional','Quick scenic stop.'),E('f5','Midday','Schwabacher Landing','schwab','optional','Scenic/wildlife stop if timing allows.'),E('f6','Afternoon','Jenny Lake','jenny','optional','Optional hike / lake stop.'),E('f7','~4–5 PM','Teton Mountain Lodge','teton','high','Check in, reset and get ready.'),E('f8','7:15 PM','Wedding-event shuttle','teton','fixed','Hard deadline.',true)],
+    sat:[E('s1','Morning','Grand Teton morning','jenny','optional','Keep the morning flexible.'),E('s2','2:30 PM','Begin return to hotel','teton','high','V4 conservative cutoff.'),E('s3','5:00 PM','Bridger Gondola access','gondola','fixed','Hard deadline.',true),E('s4','5:30 PM','Wedding','gondola','fixed','Wedding.',true)],
+    sun:[E('u1','~9:00 AM','Leave Teton Village','teton','fixed','V4 may move this earlier for weather/roads.',true),E('u2','~12:00 PM','Return rental car at IDA','ida','fixed','Target buffer before flight.',true),E('u3','2:01 PM','Flight departs','ida','fixed','Hard deadline.',true)]
+  };
+  const thuV2 = [E('t1','5:00 AM','Depart Gray Wolf Inn','gray','must','Fuel the night before.'),E('t2','~7:00 AM','Slough Creek → Lamar','slough','must','Start wildlife session near first light.'),E('t3','7:00–10:00','Lamar Valley / Soda Butte','lamar','must','Primary wildlife window. Wolves and bears may be distant.'),E('t4','~10:30 AM','Tower Fall','towerFall','high','Short overlook stop.'),E('t5','~11:30 AM','Mammoth Hot Springs','mammoth','high','Elk + terraces + lunch / visitor services.'),E('t6','~2:45–4:15','Grand Prismatic Overlook','prismatic','high','Iconic geothermal stop; tighter clock.'),E('t7','~5:00 PM','Back at Gray Wolf','gray','high','Dinner + rest.')];
+  const thuV3 = [E('t1','5:00 AM','Depart Gray Wolf Inn','gray','must','Fuel the night before.'),E('t2','~7:00 AM','Slough Creek → Lamar','slough','must','Start wildlife session near first light.'),E('t3','7:00–10:30+','Lamar Valley / Soda Butte','lamar','must','If the wildlife is excellent, stay. Optional stops give way.'),E('t4','~11:15 AM','Tower Fall','towerFall','high','Short overlook stop.'),E('t5','~11:40 AM','Calcite Springs','calcite','optional','Quick overlook; possible bighorn sheep.'),E('t6','~12:45 PM','Wraith / Undine Falls','undine','optional','Skip if behind or wildlife ran long.'),E('t7','~1:30–3:30','Mammoth Hot Springs','mammoth','high','Elk + terraces + lunch / visitor services.'),E('t8','~5:00 PM','Back at Gray Wolf','gray','high','Relaxed evening.')];
+  const thuV4 = [E('t1','Before dawn','Check conditions first','gray','must','Do not commit to Dunraven until road/weather status is acceptable.'),E('t2','Morning','Northern route via Norris / Mammoth','mammoth','high','Weather-resistant approach to the northern range.'),E('t3','Late morning','Tower / Lamar if practical','lamar','high','Only when access + visibility make the drive worthwhile.'),E('t4','Afternoon','Fallback stops as conditions allow','norris','optional','Norris, Mammoth and West Yellowstone are the primary fallback anchors.'),E('t5','Evening','Back at Gray Wolf','gray','high','Recheck Friday southbound conditions.')];
+  const itineraries = {
+    v2:{name:'V2 — Grand Prismatic',short:'Grand Prismatic',subtitle:'Wildlife + geothermal',days:{...sharedDays,thu:thuV2}},
+    v3:{name:'V3 — Northern Wildlife',short:'Northern Wildlife',subtitle:'Wildlife first',days:{...sharedDays,thu:thuV3}},
+    v4:{name:'V4 — Flexible Conditions',short:'Flexible Conditions',subtitle:'Weather / closure resistant',days:{...sharedDays,thu:thuV4}}
+  };
+
+  const routeKeys = {
+    v2:{wed:['ida','gray'],thu:['gray','west','madison','canyon','tower','slough','lamar','soda','tower','mammoth','norris','madison','prismatic','madison','west','gray'],fri:['gray','west','madison','norris','canyon','hayden','south','oxbow','snake','schwab','jenny','teton'],sat:['teton','jenny','teton','gondola'],sun:['teton','victor','driggs','ashton','ida']},
+    v3:{wed:['ida','gray'],thu:['gray','west','madison','canyon','tower','slough','lamar','soda','tower','calcite','undine','mammoth','norris','madison','west','gray'],fri:['gray','west','madison','norris','canyon','hayden','south','oxbow','snake','schwab','jenny','teton'],sat:['teton','jenny','teton','gondola'],sun:['teton','victor','driggs','ashton','ida']},
+    v4:{wed:['ida','gray'],thu:['gray','west','madison','norris','mammoth','tower','slough','lamar','tower','mammoth','norris','madison','west','gray'],fri:['gray','west','madison','norris','canyon','hayden','south','oxbow','teton'],sat:['teton','jenny','teton','gondola'],sun:['teton','victor','driggs','ashton','ida']}
+  };
+  const dayMeta = {wed:['Wednesday · Arrival','West Yellowstone setup'],thu:['Thursday · Northern Yellowstone','Wildlife first'],fri:['Friday · Yellowstone → Tetons','Dawn wildlife + transition'],sat:['Saturday · Grand Teton + Wedding','Flexible morning'],sun:['Sunday · Fly home','Protect airport buffer']};
+  const dayButtons = [['wed','Wed 23'],['thu','Thu 24'],['fri','Fri 25'],['sat','Sat 26'],['sun','Sun 27']];
+
+  function renderDayBars(){
+    ['dayBar','mapDayBar'].forEach(id=>{ const isMap=id==='mapDayBar'; const cur=isMap?state.mapDay:state.day; $('#'+id).innerHTML=dayButtons.map(([k,l])=>`<button class="dayBtn ${k===cur?'active':''}" data-day="${k}" type="button">${l}</button>`).join(''); $('#'+id).querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ if(isMap){state.mapDay=b.dataset.day; renderMapDay();} else {state.day=b.dataset.day; renderDashboard();} save(); renderDayBars(); })); });
+  }
+  function pTag(priority){ return `<span class="tag ${priority}">${priority==='fixed'?'Hard deadline':priority}</span>`; }
+  function renderDashboard(){
+    const plan=itineraries[state.plan]; const events=plan.days[state.day]||[]; const next=events.find(e=>!state.done[`${state.plan}-${state.day}-${e.id}`])||events[events.length-1];
+    $('#modeLabel').textContent=(inTripDate(state.day)?'Live day':'Preview')+' • '+dayMeta[state.day][0].split(' · ')[0];
+    $('#nextName').textContent=next?next.name:'Day complete'; $('#nextTime').textContent=next?next.time:'✓'; $('#nextMeta').textContent=next?next.note:'';
+    $('#dayTitle').textContent=dayMeta[state.day][0]; $('#daySubtitle').textContent=state.day==='thu'?plan.subtitle:dayMeta[state.day][1];
+    const hard=events.filter(e=>e.hard); $('#deadlineList').innerHTML=hard.length?hard.map(e=>`<div class="deadline"><span>${e.name}</span><strong>${e.time}</strong></div>`).join(''):'<div class="smallText muted" style="margin-top:9px">No fixed-time commitments on this preview day.</div>';
+    $('#timeline').innerHTML=events.map(e=>{
+      const key=`${state.plan}-${state.day}-${e.id}`, done=!!state.done[key], pl=e.place&&P[e.place];
+      return `<div class="event ${done?'done':''}" data-event="${e.id}"><div class="eventTime">${e.time}</div><div class="eventRail"><span></span></div><div><div class="eventName">${e.name}</div><div class="eventMeta">${e.note}</div>${pTag(e.priority)}<div class="eventActions"><button class="linkBtn doneBtn ${done?'doneState':''}" type="button" data-done-key="${key}">${done?'✓ Done':'Mark done'}</button>${pl?`<button class="linkBtn showMap" type="button" data-place="${e.place}">Show on map</button>`:''}</div></div></div>`;
+    }).join('');
+    $$('.doneBtn').forEach(b=>b.addEventListener('click',()=>{state.done[b.dataset.doneKey]=!state.done[b.dataset.doneKey];save();renderDashboard();}));
+    $$('.showMap').forEach(b=>b.addEventListener('click',()=>{state.mapDay=state.day; showView('mapView'); setTimeout(()=>selectStop(b.dataset.place,true),120); }));
+  }
+  function inTripDate(day){
+    const m={wed:23,thu:24,fri:25,sat:26,sun:27}; const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/Denver',year:'numeric',month:'numeric',day:'numeric'}).formatToParts(new Date()); const obj=Object.fromEntries(parts.map(x=>[x.type,x.value])); return +obj.year===2026 && +obj.month===9 && +obj.day===m[day];
+  }
+
+  let map, overviewMap, mainMapLoaded=false, overviewLoaded=false;
+  const MAP_STYLE='https://tiles.openfreemap.org/styles/liberty';
+  function initMap(){
+    if(mainMapLoaded) return;
+    map=new maplibregl.Map({container:'map',style:MAP_STYLE,center:[-110.55,44.70],zoom:7.1,attributionControl:true});
+    map.addControl(new maplibregl.NavigationControl({showCompass:true,showZoom:false}),'bottom-right');
+    map.on('load',()=>{mainMapLoaded=true; ensureMapSources(map,'main'); renderMapDay(); restoreGpsMarker();});
+  }
+  function initOverviewMap(){
+    if(overviewLoaded){overviewMap.resize();return;}
+    overviewMap=new maplibregl.Map({container:'overviewMap',style:MAP_STYLE,center:[-110.60,44.75],zoom:7.1,attributionControl:true});
+    overviewMap.on('load',()=>{overviewLoaded=true; ensureMapSources(overviewMap,'overview'); renderOverviewRoutes();});
+  }
+  function emptyFC(){return {type:'FeatureCollection',features:[]};}
+  function ensureMapSources(m,prefix){
+    m.addSource(prefix+'-route',{type:'geojson',data:emptyFC()});
+    m.addLayer({id:prefix+'-route-casing',type:'line',source:prefix+'-route',paint:{'line-color':'#08100d','line-width':8,'line-opacity':.75}});
+    m.addLayer({id:prefix+'-route-line',type:'line',source:prefix+'-route',paint:{'line-color':prefix==='main'?planColor(state.plan):'#65aaf7','line-width':4.5,'line-opacity':.95}});
+    m.addSource(prefix+'-stops',{type:'geojson',data:emptyFC()});
+    m.addLayer({id:prefix+'-stop-circles',type:'circle',source:prefix+'-stops',paint:{'circle-radius':['interpolate',['linear'],['zoom'],6,4,10,7,14,10],'circle-color':['case',['==',['get','cat'],'Wildlife'],'#e1b85b',['==',['get','cat'],'Wildlife / thermal'],'#e1b85b','#f3f5f2'],'circle-stroke-color':'#0a120f','circle-stroke-width':2}});
+    m.addLayer({id:prefix+'-stop-labels',type:'symbol',source:prefix+'-stops',minzoom:8.5,layout:{'text-field':['get','name'],'text-size':11,'text-offset':[0,1.15],'text-anchor':'top','text-allow-overlap':false},paint:{'text-color':'#f2f5f1','text-halo-color':'#0a120f','text-halo-width':1.5}});
+    if(prefix==='main'){
+      m.on('click','main-stop-circles',ev=>{if(ev.features&&ev.features[0]) selectStop(ev.features[0].properties.key,false);});
+      m.on('mouseenter','main-stop-circles',()=>m.getCanvas().style.cursor='pointer'); m.on('mouseleave','main-stop-circles',()=>m.getCanvas().style.cursor='');
+    }
+  }
+  function planColor(plan){return plan==='v2'?'#65aaf7':plan==='v3'?'#71d09e':'#e1b85b';}
+  function routePoints(plan,day){
+    let keys=[...(routeKeys[plan]?.[day]||[])];
+    if(plan==='v4' && day==='thu'){
+      if(state.scenario==='snow') keys=['gray','west','madison','norris','mammoth','norris','madison','west','gray'];
+      if(state.scenario==='late') keys=['gray','west','madison','norris','mammoth','tower','lamar','tower','mammoth','norris','madison','west','gray'];
+      if(state.scenario==='closure'||state.scenario==='poor') keys=routeKeys.v4.thu;
+    }
+    if(plan==='v4' && day==='fri' && (state.scenario==='closure'||state.scenario==='snow'||state.scenario==='late')) keys=['gray','islandPark','ashton','driggs','victor','teton'];
+    return keys.map(k=>[P[k].lng,P[k].lat]);
+  }
+  function uniqueStopKeys(plan,day){ return [...new Set((routeKeys[plan]?.[day]||[]).filter(k=>!['west','madison','norris','canyon','south','islandPark','ashton','driggs','victor'].includes(k)))]; }
+  function straightRouteGeo(plan,day){return {type:'FeatureCollection',features:[{type:'Feature',properties:{},geometry:{type:'LineString',coordinates:routePoints(plan,day)}}]};}
+  function stopGeo(plan,day){return {type:'FeatureCollection',features:uniqueStopKeys(plan,day).map(k=>({type:'Feature',properties:{key:k,name:P[k].name,cat:P[k].cat},geometry:{type:'Point',coordinates:[P[k].lng,P[k].lat]}}))};}
+  async function getRoutedGeo(plan,day){
+    const pts=routePoints(plan,day); if(pts.length<2) return straightRouteGeo(plan,day);
+    const cacheKey=`routeGeo-${plan}-${day}-${state.scenario}`; const cached=localStorage.getItem(cacheKey); if(cached){try{return JSON.parse(cached);}catch(e){}}
+    if(!navigator.onLine) return straightRouteGeo(plan,day);
+    try{
+      const coord=pts.map(x=>x.join(',')).join(';'); const url=`https://router.project-osrm.org/route/v1/driving/${coord}?overview=full&geometries=geojson&continue_straight=false`;
+      const res=await fetch(url); if(!res.ok) throw new Error('route'); const j=await res.json(); if(!j.routes?.[0]?.geometry) throw new Error('route'); const geo={type:'FeatureCollection',features:[{type:'Feature',properties:{routed:true},geometry:j.routes[0].geometry}]}; localStorage.setItem(cacheKey,JSON.stringify(geo)); return geo;
+    }catch(e){return straightRouteGeo(plan,day);}
+  }
+  async function renderMapDay(){
+    renderDayBars(); if(!mainMapLoaded){initMap();return;} const plan=state.plan,day=state.mapDay; $('#mapRouteLabel').textContent=`${itineraries[plan].short} · ${dayButtons.find(d=>d[0]===day)[1]}`;
+    map.setPaintProperty('main-route-line','line-color',planColor(plan)); map.getSource('main-stops').setData(stopGeo(plan,day)); map.getSource('main-route').setData(straightRouteGeo(plan,day)); fitCoords(map,routePoints(plan,day)); const routed=await getRoutedGeo(plan,day); if(state.plan===plan&&state.mapDay===day) map.getSource('main-route').setData(routed);
+  }
+  function fitCoords(m,coords){ if(!coords.length)return; const b=new maplibregl.LngLatBounds(); coords.forEach(c=>b.extend(c)); m.fitBounds(b,{padding:{top:70,bottom:55,left:35,right:35},maxZoom:10,duration:500}); }
+  function selectStop(key,fly){ const pl=P[key]; if(!pl)return; state.activeStop=key; if(fly&&map)map.flyTo({center:[pl.lng,pl.lat],zoom:11.2}); const apple=`https://maps.apple.com/?daddr=${pl.lat},${pl.lng}`; const google=`https://www.google.com/maps/dir/?api=1&destination=${pl.lat},${pl.lng}`; $('#stopSheet').innerHTML=`<div class="sheetHead"><div><div class="sheetName">${pl.name}</div><div class="smallText muted">${pl.cat}</div></div><button class="btn small ghost" id="closeSheet" type="button">Close</button></div><div class="sheetActions"><a class="linkBtn" href="${apple}" target="_blank" rel="noopener">Apple Maps ↗</a><a class="linkBtn" href="${google}" target="_blank" rel="noopener">Google Maps ↗</a></div>`; $('#stopSheet').classList.add('show'); $('#closeSheet').addEventListener('click',()=>$('#stopSheet').classList.remove('show')); }
+
+  async function renderOverviewRoutes(){
+    if(!overviewLoaded)return;
+    const v2=await getRoutedGeo('v2','thu'), v3=await getRoutedGeo('v3','thu');
+    if(overviewMap.getLayer('overview-route-line')){overviewMap.removeLayer('overview-route-line');overviewMap.removeLayer('overview-route-casing');overviewMap.removeSource('overview-route');}
+    ['v2','v3'].forEach((k,i)=>{const geo=k==='v2'?v2:v3; overviewMap.addSource('ov-'+k,{type:'geojson',data:geo}); overviewMap.addLayer({id:'ov-'+k+'-case',type:'line',source:'ov-'+k,paint:{'line-color':'#08100d','line-width':i?8:7,'line-opacity':.65}}); overviewMap.addLayer({id:'ov-'+k+'-line',type:'line',source:'ov-'+k,paint:{'line-color':planColor(k),'line-width':i?4.5:3.5,'line-opacity':k==='v2'?.82:.95}});});
+    const keys=[...new Set([...uniqueStopKeys('v2','thu'),...uniqueStopKeys('v3','thu'),'hayden'])]; overviewMap.getSource('overview-stops').setData({type:'FeatureCollection',features:keys.map(k=>({type:'Feature',properties:{key:k,name:P[k].name,cat:k==='hayden'?'Wildlife':P[k].cat},geometry:{type:'Point',coordinates:[P[k].lng,P[k].lat]}}))});
+    fitCoords(overviewMap,[...routePoints('v2','thu'),...routePoints('v3','thu')]);
+  }
+
+  function gpsClass(){ if(!state.gps.ts)return 'lost'; const age=(Date.now()-state.gps.ts)/1000; if(age>120)return 'lost'; if(age>25||state.gps.accuracy>80)return 'stale'; return 'live'; }
+  function gpsLabel(){ const c=gpsClass(); if(!state.gps.ts)return 'GPS not started'; const age=Math.round((Date.now()-state.gps.ts)/1000); if(c==='live')return `GPS live · ±${Math.round(state.gps.accuracy)} m`; if(c==='stale')return `GPS weak · ${age}s old`; return `Last fix · ${Math.max(1,Math.round(age/60))}m old`; }
+  function updateGpsUi(){ const c=gpsClass(), dot=$('#gpsDot'); if(dot){dot.className='dot '+(c==='live'?'blue':c==='stale'?'warn':''); $('#gpsText').textContent=gpsLabel();} if(state.gps.marker){const el=state.gps.marker.getElement();el.className='gpsMarker '+(c==='stale'?'stale':c==='lost'?'lost':'');} }
+  function startGps(center=true){ if(!navigator.geolocation){toast('Geolocation is not supported on this device.');return;} if(state.gps.watchId!==null){ if(center&&state.gps.lng!==null)map?.flyTo({center:[state.gps.lng,state.gps.lat],zoom:12}); return; }
+    state.gps.status='starting'; toast('Requesting location permission…');
+    state.gps.watchId=navigator.geolocation.watchPosition(pos=>{state.gps.lng=pos.coords.longitude;state.gps.lat=pos.coords.latitude;state.gps.accuracy=pos.coords.accuracy;state.gps.ts=Date.now(); if(!state.gps.marker&&map){const el=document.createElement('div');el.className='gpsMarker';state.gps.marker=new maplibregl.Marker({element:el,anchor:'center'}).setLngLat([state.gps.lng,state.gps.lat]).addTo(map);} else state.gps.marker?.setLngLat([state.gps.lng,state.gps.lat]); updateGpsUi(); if(center){map?.flyTo({center:[state.gps.lng,state.gps.lat],zoom:12}); center=false;} },err=>{state.gps.status='error';updateGpsUi();toast(err.code===1?'Location permission was denied.':'Could not update current position.');},{enableHighAccuracy:true,maximumAge:5000,timeout:15000});
+  }
+  function restoreGpsMarker(){ if(state.gps.lng!==null && !state.gps.marker){const el=document.createElement('div');el.className='gpsMarker';state.gps.marker=new maplibregl.Marker({element:el,anchor:'center'}).setLngLat([state.gps.lng,state.gps.lat]).addTo(map);} }
+  setInterval(updateGpsUi,5000);
+
+  function networkUi(){const on=navigator.onLine; ['networkDot','condNetworkDot'].forEach(id=>{const x=$('#'+id);if(x)x.className='dot '+(on?'good':'bad');}); if($('#networkText'))$('#networkText').textContent=on?'Network online':'Network offline';if($('#condNetworkText'))$('#condNetworkText').textContent=on?'Network online':'Network offline'; if(on){const now=new Date();localStorage.setItem('yj-last-online',now.toISOString());} const ls=localStorage.getItem('yj-last-online'); $('#syncText').textContent=ls?'Last online '+new Date(ls).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}):'App data cached'; }
+  addEventListener('online',()=>{networkUi();toast('Network connection restored.');}); addEventListener('offline',()=>{networkUi();toast('Offline — GPS can still work.');});
+
+  const species=[['grizzly','🐻','Grizzly'],['blackbear','🐻','Black bear'],['wolf','🐺','Wolf'],['bison','🦬','Bison'],['elk','🦌','Elk'],['moose','🫎','Moose'],['pronghorn','◈','Pronghorn'],['coyote','🐺','Coyote'],['bighorn','🐏','Bighorn sheep']];
+  function renderWildlife(){ $('#wildGrid').innerHTML=species.map(([id,em,n])=>`<div class="card wild"><div class="wildEmoji">${em}</div><div><div class="wildName">${n}</div><div class="wildCount">${state.wildlife[id]||0} logged</div></div><button type="button" data-species="${id}" aria-label="Log ${n}">+</button></div>`).join(''); $$('#wildGrid button').forEach(b=>b.addEventListener('click',()=>logWildlife(b.dataset.species))); renderSightings(); }
+  function logWildlife(id){ const sp=species.find(s=>s[0]===id); state.wildlife[id]=(state.wildlife[id]||0)+1; const sight={id:Date.now(),species:id,name:sp[2],time:new Date().toISOString(),lat:state.gps.lat,lng:state.gps.lng};state.sightings.unshift(sight);state.sightings=state.sightings.slice(0,40);save();renderWildlife();toast(`${sp[2]} sighting logged${sight.lat!==null?' with location':''}.`); }
+  function renderSightings(){ const a=state.sightings.slice(0,8); $('#logList').innerHTML=a.length?a.map(s=>`<div class="logItem"><div><strong>${s.name}</strong><div class="muted">${new Date(s.time).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})}</div></div><div class="muted">${s.lat!==null?`${s.lat.toFixed(4)}, ${s.lng.toFixed(4)}`:'No GPS'}</div></div>`).join(''):'<div class="smallText muted" style="margin-top:8px">No sightings logged yet. Tap + when you spot something.</div>'; }
+
+  const baseChecks=[['fuel','Fuel car the night before Yellowstone'],['bins','Pack binoculars'],['layers','Set out warm layers / rain shell'],['snacks','Pack breakfast, snacks + water'],['maps','Open the app/map while online before park days'],['roads','Check NPS road conditions before departure'],['battery','Charge phones / battery pack']];
+  function renderChecks(){ const items=[...baseChecks,...state.customChecks.map(x=>[x.id,x.text,true])]; $('#checkList').innerHTML=items.map(([id,text,custom])=>`<div class="check ${state.checks[id]?'done':''}"><input type="checkbox" id="c-${id}" data-check="${id}" ${state.checks[id]?'checked':''}><label for="c-${id}">${escapeHtml(text)}</label>${custom?`<button class="linkBtn removeCheck" type="button" data-remove="${id}">×</button>`:''}</div>`).join(''); $$('#checkList input').forEach(c=>c.addEventListener('change',()=>{state.checks[c.dataset.check]=c.checked;save();renderChecks();})); $$('.removeCheck').forEach(b=>b.addEventListener('click',()=>{state.customChecks=state.customChecks.filter(x=>x.id!==b.dataset.remove);delete state.checks[b.dataset.remove];save();renderChecks();})); }
+  function escapeHtml(s){return s.replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+
+  const scenarioText={
+    normal:['✓','Normal conditions','Use the selected sightseeing plan. V4 remains available but does not need to replace V2/V3.'],
+    poor:['🌧','Poor weather','Prefer the lower / northern approach via Norris and Mammoth. Keep Lamar only if visibility makes wildlife viewing worthwhile.'],
+    snow:['❄','Snow / ice','Reduce pre-dawn driving. Use Mammoth/Norris as the safe fallback core and avoid forcing high-elevation sightseeing.'],
+    closure:['🚧','Road closure','Use the northern alternate for Lamar when possible. On Friday, protect the Jackson arrival and use the Idaho route if Yellowstone southbound travel is unavailable.'],
+    late:['⏱','Running late','Drop optional waterfalls, scenic stops and Friday bonus stops first. Hard commitments always win.']
+  };
+  function renderScenario(){ $$('#scenarioSeg button').forEach(b=>b.classList.toggle('active',b.dataset.scenario===state.scenario)); const s=scenarioText[state.scenario]; $('#scenarioAdvice').innerHTML=`<div class="conditionIcon">${s[0]}</div><div class="conditionText"><strong>${s[1]}</strong><p>${s[2]}</p></div>`; if(state.plan==='v4'&&mainMapLoaded)renderMapDay();save(); }
+
+  function showView(id){ state.currentView=id; $$('.view').forEach(v=>v.classList.toggle('active',v.id===id)); $$('.navBtn').forEach(b=>b.classList.toggle('active',b.dataset.view===id)); if(id==='mapView'){setTimeout(()=>{initMap();map?.resize();},30);} if(id==='overviewView'){setTimeout(()=>initOverviewMap(),30);} }
+
+  $('#planSelect').value=state.plan; $('#planSelect').addEventListener('change',e=>{state.plan=e.target.value;save();renderDashboard();if(mainMapLoaded)renderMapDay();toast(`Selected ${itineraries[state.plan].name}`);});
+  $('#overviewBtn').addEventListener('click',()=>showView('overviewView')); $('#overviewBack').addEventListener('click',()=>showView('dashboardView')); $$('.planJump').forEach(b=>b.addEventListener('click',()=>{state.plan=b.dataset.plan;$('#planSelect').value=state.plan;save();renderDashboard();showView('dashboardView');toast(`Selected ${itineraries[state.plan].name}`);}));
+  $$('.navBtn').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
+  $('#locateBtn').addEventListener('click',()=>startGps(true)); $('#fitBtn').addEventListener('click',()=>fitCoords(map,routePoints(state.plan,state.mapDay)));
+  $$('#scenarioSeg button').forEach(b=>b.addEventListener('click',()=>{state.scenario=b.dataset.scenario;renderScenario();})); $('#switchV4').addEventListener('click',()=>{state.plan='v4';$('#planSelect').value='v4';save();renderDashboard();if(mainMapLoaded)renderMapDay();toast('V4 selected.');});
+  $('#addCheckForm').addEventListener('submit',e=>{e.preventDefault();const inp=$('#addCheckInput');const text=inp.value.trim();if(!text)return;state.customChecks.push({id:'x'+Date.now(),text});inp.value='';save();renderChecks();});
+
+  function setInitialDay(){ const mt=new Intl.DateTimeFormat('en-US',{timeZone:'America/Denver',year:'numeric',month:'numeric',day:'numeric'}).formatToParts(new Date()); const o=Object.fromEntries(mt.map(x=>[x.type,+x.value])); if(o.year===2026&&o.month===9){const by={23:'wed',24:'thu',25:'fri',26:'sat',27:'sun'};if(by[o.day]&&!saved.day){state.day=by[o.day];state.mapDay=by[o.day];}} }
+  setInitialDay(); renderDayBars(); renderDashboard(); renderScenario(); renderWildlife(); renderChecks(); networkUi();
+  if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}
+})();
+</script>
+</body>
+</html>
