@@ -5,7 +5,7 @@
   "display": "standalone",
   "background_color": "#07100d",
   "theme_color": "#0b1713",
-  "description": "Offline-minded itinerary, map, wildlife log and contingency companion for Yellowstone and Jackson, Sept. 23–27, 2026.",
+  "description": "Offline-minded itinerary, route map, wildlife log, Saturday hiking module and contingency companion for Yellowstone and Jackson, Sept. 23–27, 2026.",
   "icons": [
     {"src":"icon-180.png","sizes":"180x180","type":"image/png"},
     {"src":"icon-512.png","sizes":"512x512","type":"image/png"}
