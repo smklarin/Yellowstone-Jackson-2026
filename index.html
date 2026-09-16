@@ -53,7 +53,7 @@
     .timeBig{font-size:30px;font-weight:900;letter-spacing:-.04em;margin-top:6px;color:var(--gold)}
     .deadline{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--line);font-size:13px}.deadline:first-of-type{margin-top:9px}
     .dayBar{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin:4px 0 12px;scrollbar-width:none}.dayBar::-webkit-scrollbar{display:none}
-    .dayBtn{min-width:76px;background:#0d1915;border:1px solid var(--line);color:var(--muted);padding:9px 10px;border-radius:13px;font-weight:750}.dayBtn.active{background:var(--text);color:#09110e;border-color:var(--text)}
+    .dayBtn{min-width:76px;background:#0d1915;border:1px solid var(--line);color:var(--muted);padding:8px 10px;border-radius:13px;font-weight:750;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}.dayBtn .dayDow{font-size:11px;text-transform:uppercase;letter-spacing:.05em}.dayBtn .dayNum{font-size:16px;font-weight:900;margin-top:4px}.dayBtn.active{background:var(--text);color:#09110e;border-color:var(--text)}
     .sectionTitle{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:17px 2px 9px}.sectionTitle h2{font-size:17px;margin:0}.sectionTitle span{font-size:12px;color:var(--muted)}
     .timeline{display:grid;gap:8px}
     .event{display:grid;grid-template-columns:68px 18px minmax(0,1fr);gap:8px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:15px;padding:11px}
@@ -74,7 +74,7 @@
     .conditionBanner{display:flex;align-items:start;gap:10px;margin-top:10px;padding:11px;border-radius:13px;background:#1b1d16;border:1px solid #3b3b26}.conditionIcon{font-size:19px}.conditionText strong{font-size:13px}.conditionText p{font-size:12px;color:#c8c5ad;margin:3px 0 0;line-height:1.4}
     .satModule{display:none;margin:2px 0 15px}.satModule.show{display:block}.satChoiceGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.satChoice{appearance:none;text-align:left;border:1px solid var(--line);background:#0d1915;color:var(--text);border-radius:15px;padding:12px;min-height:108px}.satChoice.active{border-color:var(--purple);background:#171629;box-shadow:inset 0 0 0 1px rgba(185,156,255,.18)}.satChoiceIcon{font-size:22px}.satChoiceName{font-size:14px;font-weight:850;margin-top:6px}.satChoiceSub{font-size:11px;color:var(--muted);line-height:1.35;margin-top:3px}.satDetail{margin-top:8px}.satDetailHead{display:flex;justify-content:space-between;gap:12px;align-items:start}.satDetailName{font-size:18px;font-weight:900;letter-spacing:-.02em}.satStats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:11px}.satStat{border:1px solid var(--line);background:#0b1713;border-radius:11px;padding:9px}.satStat .k{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800}.satStat .v{font-size:12px;font-weight:800;margin-top:3px}.satNotes{margin:10px 0 0;padding-left:18px;color:var(--muted);font-size:12px;line-height:1.5}.satActions{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}.legendDash{display:inline-block;width:22px;border-top:3px dashed var(--purple);margin-right:5px;vertical-align:middle}.satWeather{display:flex;gap:7px;align-items:flex-start;margin-top:10px;padding:9px 10px;border:1px solid #3e3854;background:#171629;border-radius:11px;font-size:11px;line-height:1.45;color:#d8d0f2}
     .wildGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.wild{display:flex;align-items:center;gap:10px}.wildEmoji{font-size:28px;width:38px}.wildName{font-size:14px;font-weight:800}.wildCount{font-size:12px;color:var(--muted)}.wild button{margin-left:auto;width:40px;height:40px;border:1px solid var(--line);border-radius:11px;background:#0b1713;color:var(--text);font-size:20px}
-    .logList{display:grid;gap:7px;margin-top:10px}.logItem{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:8px;font-size:12px}.logItem .muted{font-size:11px}
+    .animalAdd{margin-top:10px}.animalAdd h3{margin-bottom:2px}.animalAdd .smallText{line-height:1.4}.logList{display:grid;gap:7px;margin-top:10px}.logItem{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:8px;font-size:12px;align-items:center}.logItem .muted{font-size:11px}.logRight{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0}.removeSight{width:34px;height:34px;border:1px solid var(--line);border-radius:9px;background:#0b1713;color:#ffb5aa;font-size:17px;line-height:1;flex:0 0 auto}.removeSight:active{background:#2a1714}
     .checkList{display:grid;gap:7px}.check{display:flex;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:12px;background:#0d1915}.check input{width:20px;height:20px;accent-color:var(--green)}.check label{font-size:13px;flex:1}.check.done label{text-decoration:line-through;color:var(--muted)}
     .addRow{display:grid;grid-template-columns:1fr auto;gap:7px;margin-top:9px}.addRow input{min-width:0;background:#0b1713;border:1px solid var(--line);color:var(--text);border-radius:11px;padding:0 11px;min-height:42px;font-size:16px}
     .infoGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.infoItem{padding:11px;border:1px solid var(--line);border-radius:13px;background:#0d1915}.infoItem .k{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.09em;font-weight:800}.infoItem .v{font-size:14px;font-weight:800;margin-top:4px}.infoItem .s{font-size:11px;color:var(--muted);margin-top:3px}
@@ -89,7 +89,7 @@
 <body>
 <div class="app" id="app">
   <header class="header">
-    <div class="eyebrow">Yellowstone + Jackson · App 2.0</div>
+    <div class="eyebrow">Yellowstone + Jackson · App 2.1</div>
     <div class="titleRow"><h1>Trip Companion</h1><div class="dates">Sep 23–27, 2026</div></div>
     <div class="planRow">
       <select id="planSelect" aria-label="Selected itinerary">
@@ -213,6 +213,14 @@
     <section class="view" id="wildlifeView">
       <div class="sectionTitle"><h2>Wildlife log</h2><span>saved on this device</span></div>
       <div class="wildGrid" id="wildGrid"></div>
+      <div class="card animalAdd">
+        <h3>Add another animal</h3>
+        <div class="smallText muted">Add a species that is not in the starter list. It will stay available on this device.</div>
+        <form class="addRow" id="addAnimalForm">
+          <input id="addAnimalInput" maxlength="32" autocomplete="off" placeholder="e.g. Red fox" aria-label="Animal name">
+          <button class="btn" type="submit">Add animal</button>
+        </form>
+      </div>
       <div class="card" style="margin-top:10px">
         <h3>Recent sightings</h3>
         <div class="logList" id="logList"></div>
@@ -259,11 +267,11 @@
   const state = {
     plan: saved.plan || 'v3', day: saved.day || 'thu', mapDay: saved.mapDay || 'thu',
     scenario: saved.scenario || 'normal', saturday: saved.saturday || 'high', done: saved.done || {}, wildlife: saved.wildlife || {},
-    sightings: saved.sightings || [], checks: saved.checks || {}, customChecks: saved.customChecks || [],
+    sightings: saved.sightings || [], customSpecies: saved.customSpecies || [], checks: saved.checks || {}, customChecks: saved.customChecks || [],
     gps: {watchId:null, lng:null, lat:null, accuracy:null, ts:null, marker:null, status:'off'},
     activeStop:null, currentView:'dashboardView'
   };
-  const save = () => localStorage.setItem(STORE, JSON.stringify({plan:state.plan,day:state.day,mapDay:state.mapDay,scenario:state.scenario,saturday:state.saturday,done:state.done,wildlife:state.wildlife,sightings:state.sightings,checks:state.checks,customChecks:state.customChecks}));
+  const save = () => localStorage.setItem(STORE, JSON.stringify({plan:state.plan,day:state.day,mapDay:state.mapDay,scenario:state.scenario,saturday:state.saturday,done:state.done,wildlife:state.wildlife,sightings:state.sightings,customSpecies:state.customSpecies,checks:state.checks,customChecks:state.customChecks}));
   const toast = msg => { const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast.t); toast.t=setTimeout(()=>t.classList.remove('show'),2200); };
 
   const P = {
@@ -395,10 +403,10 @@
     v4:{wed:['ida','gray'],thu:['gray','west','madison','norris','mammoth','tower','slough','lamar','tower','mammoth','norris','madison','west','gray'],fri:['gray','west','madison','norris','canyon','hayden','south','oxbow','teton'],sat:['teton','jenny','teton','gondola'],sun:['teton','victor','driggs','ashton','ida']}
   };
   const dayMeta = {wed:['Wednesday · Arrival','West Yellowstone setup'],thu:['Thursday · Northern Yellowstone','Wildlife first'],fri:['Friday · Yellowstone → Tetons','Dawn wildlife + transition'],sat:['Saturday · Outdoor Morning + Wedding','Choose your Saturday module'],sun:['Sunday · Fly home','Protect airport buffer']};
-  const dayButtons = [['wed','Wed 23'],['thu','Thu 24'],['fri','Fri 25'],['sat','Sat 26'],['sun','Sun 27']];
+  const dayButtons = [['wed','Wed','23'],['thu','Thu','24'],['fri','Fri','25'],['sat','Sat','26'],['sun','Sun','27']];
 
   function renderDayBars(){
-    ['dayBar','mapDayBar'].forEach(id=>{ const isMap=id==='mapDayBar'; const cur=isMap?state.mapDay:state.day; $('#'+id).innerHTML=dayButtons.map(([k,l])=>`<button class="dayBtn ${k===cur?'active':''}" data-day="${k}" type="button">${l}</button>`).join(''); $('#'+id).querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ if(isMap){state.mapDay=b.dataset.day; renderMapDay();} else {state.day=b.dataset.day; renderDashboard();} save(); renderDayBars(); })); });
+    ['dayBar','mapDayBar'].forEach(id=>{ const isMap=id==='mapDayBar'; const cur=isMap?state.mapDay:state.day; $('#'+id).innerHTML=dayButtons.map(([k,d,n])=>`<button class="dayBtn ${k===cur?'active':''}" data-day="${k}" type="button"><span class="dayDow">${d}</span><span class="dayNum">${n}</span></button>`).join(''); $('#'+id).querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ if(isMap){state.mapDay=b.dataset.day; renderMapDay();} else {state.day=b.dataset.day; renderDashboard();} save(); renderDayBars(); })); });
   }
   function pTag(priority){ return `<span class="tag ${priority}">${priority==='fixed'?'Hard deadline':priority}</span>`; }
   function satDoneKey(e){return `sat-${state.saturday}-${e.id}`;}
@@ -532,10 +540,12 @@
   function networkUi(){const on=navigator.onLine; ['networkDot','condNetworkDot'].forEach(id=>{const x=$('#'+id);if(x)x.className='dot '+(on?'good':'bad');}); if($('#networkText'))$('#networkText').textContent=on?'Network online':'Network offline';if($('#condNetworkText'))$('#condNetworkText').textContent=on?'Network online':'Network offline'; if(on){const now=new Date();localStorage.setItem('yj-last-online',now.toISOString());} const ls=localStorage.getItem('yj-last-online'); $('#syncText').textContent=ls?'Last online '+new Date(ls).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}):'App data cached'; }
   addEventListener('online',()=>{networkUi();toast('Network connection restored.');}); addEventListener('offline',()=>{networkUi();toast('Offline — GPS can still work.');});
 
-  const species=[['grizzly','🐻','Grizzly'],['blackbear','🐻','Black bear'],['wolf','🐺','Wolf'],['bison','🦬','Bison'],['elk','🦌','Elk'],['moose','🫎','Moose'],['pronghorn','◈','Pronghorn'],['coyote','🐺','Coyote'],['bighorn','🐏','Bighorn sheep']];
-  function renderWildlife(){ $('#wildGrid').innerHTML=species.map(([id,em,n])=>`<div class="card wild"><div class="wildEmoji">${em}</div><div><div class="wildName">${n}</div><div class="wildCount">${state.wildlife[id]||0} logged</div></div><button type="button" data-species="${id}" aria-label="Log ${n}">+</button></div>`).join(''); $$('#wildGrid button').forEach(b=>b.addEventListener('click',()=>logWildlife(b.dataset.species))); renderSightings(); }
-  function logWildlife(id){ const sp=species.find(s=>s[0]===id); state.wildlife[id]=(state.wildlife[id]||0)+1; const sight={id:Date.now(),species:id,name:sp[2],time:new Date().toISOString(),lat:state.gps.lat,lng:state.gps.lng};state.sightings.unshift(sight);state.sightings=state.sightings.slice(0,40);save();renderWildlife();toast(`${sp[2]} sighting logged${sight.lat!==null?' with location':''}.`); }
-  function renderSightings(){ const a=state.sightings.slice(0,8); $('#logList').innerHTML=a.length?a.map(s=>`<div class="logItem"><div><strong>${s.name}</strong><div class="muted">${new Date(s.time).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})}</div></div><div class="muted">${s.lat!==null?`${s.lat.toFixed(4)}, ${s.lng.toFixed(4)}`:'No GPS'}</div></div>`).join(''):'<div class="smallText muted" style="margin-top:8px">No sightings logged yet. Tap + when you spot something.</div>'; }
+  const baseSpecies=[['grizzly','🐻','Grizzly'],['blackbear','🐻','Black bear'],['wolf','🐺','Wolf'],['bison','🦬','Bison'],['elk','🦌','Elk'],['moose','🫎','Moose'],['pronghorn','◈','Pronghorn'],['coyote','🐺','Coyote'],['bighorn','🐏','Bighorn sheep']];
+  const allSpecies=()=>[...baseSpecies,...state.customSpecies.map(x=>[x.id,'🐾',x.name])];
+  function renderWildlife(){ $('#wildGrid').innerHTML=allSpecies().map(([id,em,n])=>`<div class="card wild"><div class="wildEmoji">${em}</div><div><div class="wildName">${escapeHtml(n)}</div><div class="wildCount">${state.wildlife[id]||0} logged</div></div><button type="button" data-species="${id}" aria-label="Log ${escapeHtml(n)}">+</button></div>`).join(''); $$('#wildGrid button').forEach(b=>b.addEventListener('click',()=>logWildlife(b.dataset.species))); renderSightings(); }
+  function logWildlife(id){ const sp=allSpecies().find(s=>s[0]===id); if(!sp)return; state.wildlife[id]=(state.wildlife[id]||0)+1; const sight={id:Date.now()+Math.floor(Math.random()*1000),species:id,name:sp[2],time:new Date().toISOString(),lat:state.gps.lat,lng:state.gps.lng};state.sightings.unshift(sight);state.sightings=state.sightings.slice(0,40);save();renderWildlife();toast(`${sp[2]} sighting logged${sight.lat!==null?' with location':''}.`); }
+  function removeSighting(id){ const idx=state.sightings.findIndex(s=>String(s.id)===String(id)); if(idx<0)return; const [sight]=state.sightings.splice(idx,1); state.wildlife[sight.species]=Math.max(0,(state.wildlife[sight.species]||0)-1); save();renderWildlife();toast(`${sight.name} sighting removed.`); }
+  function renderSightings(){ const a=state.sightings.slice(0,12); $('#logList').innerHTML=a.length?a.map(s=>`<div class="logItem"><div><strong>${escapeHtml(s.name)}</strong><div class="muted">${new Date(s.time).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})}</div></div><div class="logRight"><div class="muted">${s.lat!==null?`${s.lat.toFixed(4)}, ${s.lng.toFixed(4)}`:'No GPS'}</div><button class="removeSight" type="button" data-sighting-id="${s.id}" aria-label="Remove ${escapeHtml(s.name)} sighting">×</button></div></div>`).join(''):'<div class="smallText muted" style="margin-top:8px">No sightings logged yet. Tap + when you spot something.</div>'; $$('.removeSight').forEach(b=>b.addEventListener('click',()=>removeSighting(b.dataset.sightingId))); }
 
   const baseChecks=[['fuel','Fuel car the night before Yellowstone'],['bins','Pack binoculars'],['layers','Set out warm layers / rain shell'],['snacks','Pack breakfast, snacks + water'],['maps','Open the app/map while online before park days'],['roads','Check NPS road conditions before departure'],['battery','Charge phones / battery pack']];
   function renderChecks(){ const items=[...baseChecks,...state.customChecks.map(x=>[x.id,x.text,true])]; $('#checkList').innerHTML=items.map(([id,text,custom])=>`<div class="check ${state.checks[id]?'done':''}"><input type="checkbox" id="c-${id}" data-check="${id}" ${state.checks[id]?'checked':''}><label for="c-${id}">${escapeHtml(text)}</label>${custom?`<button class="linkBtn removeCheck" type="button" data-remove="${id}">×</button>`:''}</div>`).join(''); $$('#checkList input').forEach(c=>c.addEventListener('change',()=>{state.checks[c.dataset.check]=c.checked;save();renderChecks();})); $$('.removeCheck').forEach(b=>b.addEventListener('click',()=>{state.customChecks=state.customChecks.filter(x=>x.id!==b.dataset.remove);delete state.checks[b.dataset.remove];save();renderChecks();})); }
@@ -558,6 +568,7 @@
   $('#locateBtn').addEventListener('click',()=>startGps(true)); $('#fitBtn').addEventListener('click',()=>fitCoords(map,mapFitPoints(state.plan,state.mapDay)));
   $$('#scenarioSeg button').forEach(b=>b.addEventListener('click',()=>{state.scenario=b.dataset.scenario;renderScenario();})); $('#switchV4').addEventListener('click',()=>{state.plan='v4';$('#planSelect').value='v4';save();renderDashboard();if(mainMapLoaded)renderMapDay();toast('V4 selected.');});
   $('#addCheckForm').addEventListener('submit',e=>{e.preventDefault();const inp=$('#addCheckInput');const text=inp.value.trim();if(!text)return;state.customChecks.push({id:'x'+Date.now(),text});inp.value='';save();renderChecks();});
+  $('#addAnimalForm').addEventListener('submit',e=>{e.preventDefault();const inp=$('#addAnimalInput');const name=inp.value.trim().replace(/\s+/g,' ');if(!name)return;const exists=allSpecies().some(s=>s[2].toLowerCase()===name.toLowerCase());if(exists){toast(`${name} is already in the wildlife list.`);return;}state.customSpecies.push({id:'animal-'+Date.now(),name});inp.value='';save();renderWildlife();toast(`${name} added to the wildlife list.`);});
 
   function setInitialDay(){ const mt=new Intl.DateTimeFormat('en-US',{timeZone:'America/Denver',year:'numeric',month:'numeric',day:'numeric'}).formatToParts(new Date()); const o=Object.fromEntries(mt.map(x=>[x.type,+x.value])); if(o.year===2026&&o.month===9){const by={23:'wed',24:'thu',25:'fri',26:'sat',27:'sun'};if(by[o.day]&&!saved.day){state.day=by[o.day];state.mapDay=by[o.day];}} }
   setInitialDay(); renderDayBars(); renderDashboard(); renderScenario(); renderWildlife(); renderChecks(); networkUi();

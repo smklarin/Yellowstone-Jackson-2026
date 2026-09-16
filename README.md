@@ -1,8 +1,18 @@
-# Yellowstone + Jackson Trip Companion — App 2.0
+# Yellowstone + Jackson Trip Companion — App 2.1
 
 Mobile-first static PWA for the Sept. 23–27, 2026 Yellowstone / Jackson trip.
 
-## What changed in App 2.0
+## What changed in App 2.1
+
+
+App 2.1 is a focused usability update:
+
+- Day selectors now use one consistent two-line format (weekday above date) on both Today and Map views.
+- Wildlife sightings can be removed from the Recent Sightings list; removing one also corrects the species count.
+- Custom animals can be added to the Wildlife tab and are persisted locally on the device.
+- Recent Sightings now shows up to 12 entries for easier correction of accidental taps.
+
+## App 2.0 foundation
 
 The main addition is a **Saturday Module** that is independent of the Yellowstone V2 / V3 / V4 itinerary selector. Saturday can be changed without affecting Thursday or Friday.
 
