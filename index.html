@@ -67,7 +67,7 @@
     .mapPill{background:rgba(7,16,13,.9);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:12px;padding:8px 10px;font-size:12px;color:var(--text)}
     .mapTools{display:flex;gap:6px}.mapTools button{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:rgba(7,16,13,.92);color:var(--text);font-size:18px}
     .gpsMarker{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:3px solid #fff;box-shadow:0 2px 12px rgba(0,0,0,.45);background:var(--gps-live);transition:background .2s}.gpsMarker::after{content:'▲';font-size:11px;color:white;transform:translateY(-1px)}.gpsMarker.stale{background:var(--gps-stale)}.gpsMarker.lost{background:var(--gray)}
-    .mapLegend{display:flex;gap:8px;flex-wrap:wrap;margin:8px 2px 0;color:var(--muted);font-size:11px}.legendLine{display:inline-block;width:22px;height:4px;border-radius:10px;margin-right:5px;vertical-align:middle}.legendDot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+    .mapLegend{display:flex;gap:8px;flex-wrap:wrap;margin:8px 2px 0;color:var(--muted);font-size:11px}.legendLine{display:inline-block;width:22px;height:4px;border-radius:10px;margin-right:5px;vertical-align:middle}.legendDot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}.legendArrow{display:inline-block;margin-right:5px;color:#f7faf8;font-size:18px;font-weight:900;line-height:10px;vertical-align:-1px;text-shadow:0 1px 2px #08100d}
     .mapNotice{margin-top:8px;font-size:11px;color:var(--muted);line-height:1.35}
     .stopSheet{margin-top:10px;display:none}.stopSheet.show{display:block}.sheetHead{display:flex;justify-content:space-between;gap:10px;align-items:start}.sheetName{font-size:18px;font-weight:850}.sheetActions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
     .overviewGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}.planCard{position:relative;overflow:hidden}.planCard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px}.planCard.v2::before{background:var(--v2)}.planCard.v3::before{background:var(--v3)}.planName{font-size:17px;font-weight:850}.planDesc{font-size:12px;color:var(--muted);line-height:1.4;margin-top:5px}.metric{display:flex;justify-content:space-between;gap:8px;font-size:12px;margin-top:8px}.metric strong{font-size:12px}
@@ -91,7 +91,7 @@
 <body>
 <div class="app" id="app">
   <header class="header">
-    <div class="eyebrow">Yellowstone + Jackson · App 2.3</div>
+    <div class="eyebrow">Yellowstone + Jackson · App 2.4</div>
     <div class="titleRow"><h1>Trip Companion</h1><div class="dates">Sep 23–27, 2026</div></div>
     <div class="planRow">
       <select id="planSelect" aria-label="Selected itinerary">
@@ -153,6 +153,7 @@
         <span><span class="legendDot" style="background:var(--gray)"></span>Last known GPS</span>
         <span><span class="legendDot" style="background:var(--stop-wildlife)"></span>Wildlife-focused stop</span>
         <span><span class="legendDot" style="background:var(--stop-other);border:1px solid #51615a"></span>Other destination</span>
+        <span><span class="legendArrow">›</span>Travel direction</span>
         <span id="satTrailLegend" style="display:none"><span class="legendDash"></span>Saturday lift / boat / hike</span>
       </div>
       <div class="mapNotice" id="mapNotice">Route is a trip-planning aid, not turn-by-turn navigation. Yellowstone NPS cautions that consumer navigation can route visitors onto closed or unsuitable roads; check official road conditions before driving.</div>
@@ -191,7 +192,7 @@
           <span class="status"><span class="dot" id="condNetworkDot"></span><span id="condNetworkText">Network</span></span>
           <span class="status"><span class="dot blue"></span><span id="lastRoadSync">Road data: manual check</span></span>
         </div>
-        <div class="conditionBanner"><div class="conditionIcon">ⓘ</div><div class="conditionText"><strong>App 2.3 does not claim live road/weather data yet.</strong><p>Use the official-condition links below, then choose the matching Flexible Conditions scenario. Live-data integration can be added after the core app is tested.</p></div></div>
+        <div class="conditionBanner"><div class="conditionIcon">ⓘ</div><div class="conditionText"><strong>App 2.4 does not claim live road/weather data yet.</strong><p>Use the official-condition links below, then choose the matching Flexible Conditions scenario. Live-data integration can be added after the core app is tested.</p></div></div>
         <div class="sectionTitle" style="margin-top:14px"><h2 style="font-size:14px">Flexible Conditions scenario</h2><span>changes fallback route + priorities</span></div>
         <div class="seg" id="scenarioSeg">
           <button type="button" data-scenario="normal" class="active">Normal</button>
@@ -246,7 +247,7 @@
       <div class="sectionTitle"><h2>Checklist</h2><span>tap to complete</span></div>
       <div class="card"><div class="checkList" id="checkList"></div><form class="addRow" id="addCheckForm"><input id="addCheckInput" maxlength="60" placeholder="Add a checklist item…" aria-label="New checklist item"><button class="btn small" type="submit">Add</button></form></div>
       <div class="sectionTitle"><h2>Offline status</h2><span>PWA shell + viewed map resources</span></div>
-      <div class="card smallText muted" style="line-height:1.55">The itinerary, checklists, wildlife log and fallback route data are stored locally. The service worker caches the app shell and map resources as you use them. A future version can package a dedicated Yellowstone/Grand Teton offline basemap for more complete zero-signal coverage. App 2.3 also stores the selected Saturday module locally.</div>
+      <div class="card smallText muted" style="line-height:1.55">The itinerary, checklists, wildlife log and fallback route data are stored locally. The service worker caches the app shell and map resources as you use them. A future version can package a dedicated Yellowstone/Grand Teton offline basemap for more complete zero-signal coverage. App 2.4 also stores the selected Saturday module locally.</div>
     </section>
   </main>
 
@@ -466,6 +467,7 @@
     m.addSource(prefix+'-route',{type:'geojson',data:emptyFC()});
     m.addLayer({id:prefix+'-route-casing',type:'line',source:prefix+'-route',paint:{'line-color':'#08100d','line-width':8,'line-opacity':.75}});
     m.addLayer({id:prefix+'-route-line',type:'line',source:prefix+'-route',paint:{'line-color':prefix==='main'?planColor(state.plan):'#4c8dff','line-width':4.5,'line-opacity':.95}});
+    m.addLayer({id:prefix+'-route-arrows',type:'symbol',source:prefix+'-route',layout:{'symbol-placement':'line','symbol-spacing':105,'text-field':'›','text-size':18,'text-rotation-alignment':'map','text-pitch-alignment':'map','text-keep-upright':false,'text-allow-overlap':true,'text-ignore-placement':true},paint:{'text-color':'#f7faf8','text-halo-color':'#08100d','text-halo-width':1.6,'text-opacity':.96}});
     m.addSource(prefix+'-trail',{type:'geojson',data:emptyFC()});
     m.addLayer({id:prefix+'-trail-line',type:'line',source:prefix+'-trail',paint:{'line-color':'#b99cff','line-width':3,'line-dasharray':[2,2],'line-opacity':.95}});
     m.addSource(prefix+'-stops',{type:'geojson',data:emptyFC()});
@@ -529,7 +531,7 @@
     if(!overviewLoaded)return;
     const v2=await getRoutedGeo('v2','thu'), v3=await getRoutedGeo('v3','thu');
     if(overviewMap.getLayer('overview-route-line')){overviewMap.removeLayer('overview-route-line');overviewMap.removeLayer('overview-route-casing');overviewMap.removeSource('overview-route');}
-    ['v2','v3'].forEach((k,i)=>{const geo=k==='v2'?v2:v3; overviewMap.addSource('ov-'+k,{type:'geojson',data:geo}); overviewMap.addLayer({id:'ov-'+k+'-case',type:'line',source:'ov-'+k,paint:{'line-color':'#08100d','line-width':i?8:7,'line-opacity':.65}}); overviewMap.addLayer({id:'ov-'+k+'-line',type:'line',source:'ov-'+k,paint:{'line-color':planColor(k),'line-width':i?4.5:3.5,'line-opacity':k==='v2'?.82:.95}});});
+    ['v2','v3'].forEach((k,i)=>{const geo=k==='v2'?v2:v3; overviewMap.addSource('ov-'+k,{type:'geojson',data:geo}); overviewMap.addLayer({id:'ov-'+k+'-case',type:'line',source:'ov-'+k,paint:{'line-color':'#08100d','line-width':i?8:7,'line-opacity':.65}}); overviewMap.addLayer({id:'ov-'+k+'-line',type:'line',source:'ov-'+k,paint:{'line-color':planColor(k),'line-width':i?4.5:3.5,'line-opacity':k==='v2'?.82:.95}}); overviewMap.addLayer({id:'ov-'+k+'-arrows',type:'symbol',source:'ov-'+k,layout:{'symbol-placement':'line','symbol-spacing':120,'text-field':'›','text-size':17,'text-rotation-alignment':'map','text-pitch-alignment':'map','text-keep-upright':false,'text-allow-overlap':true,'text-ignore-placement':true},paint:{'text-color':'#f7faf8','text-halo-color':'#08100d','text-halo-width':1.5,'text-opacity':.92}});});
     const keys=[...new Set([...uniqueStopKeys('v2','thu'),...uniqueStopKeys('v3','thu'),'hayden'])]; overviewMap.getSource('overview-stops').setData({type:'FeatureCollection',features:keys.map(k=>({type:'Feature',properties:{key:k,name:P[k].name,cat:k==='hayden'?'Wildlife':P[k].cat},geometry:{type:'Point',coordinates:[P[k].lng,P[k].lat]}}))});
     fitCoords(overviewMap,[...routePoints('v2','thu'),...routePoints('v3','thu')]);
   }
