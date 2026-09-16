@@ -16,7 +16,9 @@
       --bg:#07100d; --panel:#0d1915; --panel2:#11221b; --card:#12231d;
       --text:#f2f5f1; --muted:#9fb1a8; --line:#24382f; --green:#6fc59c;
       --gold:#e1b85b; --blue:#62a8ff; --yellow:#f2c94c; --red:#ef6d6d; --gray:#9aa5a0;
-      --purple:#b99cff; --v2:#65aaf7; --v3:#71d09e; --safe:env(safe-area-inset-bottom,0px);
+      --purple:#b99cff; --v2:#4c8dff; --v3:#65d69d; --v4:#fb923c;
+      --gps-live:#2dd4bf; --gps-stale:#f472b6; --stop-wildlife:#fbbf24; --stop-other:#f3f5f2;
+      --safe:env(safe-area-inset-bottom,0px);
     }
     *{box-sizing:border-box}
     html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -47,7 +49,7 @@
     .tiny{font-size:11px}.smallText{font-size:13px}
     .statusRow{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
     .status{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border:1px solid var(--line);border-radius:999px;font-size:12px;background:#0b1713}
-    .dot{width:8px;height:8px;border-radius:50%;background:var(--gray);flex:0 0 auto}.dot.good{background:var(--green)}.dot.warn{background:var(--yellow)}.dot.bad{background:var(--red)}.dot.blue{background:var(--blue)}
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--gray);flex:0 0 auto}.dot.good{background:var(--green)}.dot.warn{background:var(--yellow)}.dot.bad{background:var(--red)}.dot.blue{background:var(--blue)}.dot.gpsLive{background:var(--gps-live)}.dot.gpsStale{background:var(--gps-stale)}
     .nextTitle{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.08em}
     .nextName{font-size:24px;font-weight:850;letter-spacing:-.04em;margin-top:3px}
     .timeBig{font-size:30px;font-weight:900;letter-spacing:-.04em;margin-top:6px;color:var(--gold)}
@@ -64,7 +66,7 @@
     .mapWrap{position:relative}.mapTop{position:absolute;z-index:8;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}.mapTop>*{pointer-events:auto}
     .mapPill{background:rgba(7,16,13,.9);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:12px;padding:8px 10px;font-size:12px;color:var(--text)}
     .mapTools{display:flex;gap:6px}.mapTools button{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:rgba(7,16,13,.92);color:var(--text);font-size:18px}
-    .gpsMarker{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:3px solid #fff;box-shadow:0 2px 12px rgba(0,0,0,.45);background:var(--blue);transition:background .2s}.gpsMarker::after{content:'▲';font-size:11px;color:white;transform:translateY(-1px)}.gpsMarker.stale{background:var(--yellow)}.gpsMarker.lost{background:var(--gray)}
+    .gpsMarker{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:3px solid #fff;box-shadow:0 2px 12px rgba(0,0,0,.45);background:var(--gps-live);transition:background .2s}.gpsMarker::after{content:'▲';font-size:11px;color:white;transform:translateY(-1px)}.gpsMarker.stale{background:var(--gps-stale)}.gpsMarker.lost{background:var(--gray)}
     .mapLegend{display:flex;gap:8px;flex-wrap:wrap;margin:8px 2px 0;color:var(--muted);font-size:11px}.legendLine{display:inline-block;width:22px;height:4px;border-radius:10px;margin-right:5px;vertical-align:middle}.legendDot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
     .mapNotice{margin-top:8px;font-size:11px;color:var(--muted);line-height:1.35}
     .stopSheet{margin-top:10px;display:none}.stopSheet.show{display:block}.sheetHead{display:flex;justify-content:space-between;gap:10px;align-items:start}.sheetName{font-size:18px;font-weight:850}.sheetActions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
@@ -89,7 +91,7 @@
 <body>
 <div class="app" id="app">
   <header class="header">
-    <div class="eyebrow">Yellowstone + Jackson · App 2.2</div>
+    <div class="eyebrow">Yellowstone + Jackson · App 2.3</div>
     <div class="titleRow"><h1>Trip Companion</h1><div class="dates">Sep 23–27, 2026</div></div>
     <div class="planRow">
       <select id="planSelect" aria-label="Selected itinerary">
@@ -145,10 +147,12 @@
         <div id="map" aria-label="Trip route map"></div>
       </div>
       <div class="mapLegend" id="mapLegend">
-        <span><span class="legendLine" style="background:var(--v3)"></span>Selected route</span>
-        <span><span class="legendDot" style="background:var(--blue)"></span>Live GPS</span>
-        <span><span class="legendDot" style="background:var(--yellow)"></span>Stale GPS</span>
-        <span><span class="legendDot" style="background:var(--gray)"></span>Last known</span>
+        <span><span class="legendLine" id="routeLegendLine" style="background:var(--v3)"></span><span id="routeLegendText">Selected route</span></span>
+        <span><span class="legendDot" style="background:var(--gps-live)"></span>Live GPS</span>
+        <span><span class="legendDot" style="background:var(--gps-stale)"></span>Stale GPS</span>
+        <span><span class="legendDot" style="background:var(--gray)"></span>Last known GPS</span>
+        <span><span class="legendDot" style="background:var(--stop-wildlife)"></span>Wildlife-focused stop</span>
+        <span><span class="legendDot" style="background:var(--stop-other);border:1px solid #51615a"></span>Other destination</span>
         <span id="satTrailLegend" style="display:none"><span class="legendDash"></span>Saturday lift / boat / hike</span>
       </div>
       <div class="mapNotice" id="mapNotice">Route is a trip-planning aid, not turn-by-turn navigation. Yellowstone NPS cautions that consumer navigation can route visitors onto closed or unsuitable roads; check official road conditions before driving.</div>
@@ -162,7 +166,7 @@
         <div class="card planCard v3"><div class="planName">Northern Wildlife</div><div class="planDesc">Keeps the day concentrated in the northern range so excellent wildlife sightings can win over the schedule.</div><div class="metric"><span>Lamar target</span><strong>3½–4+ hours</strong></div><div class="metric"><span>Thursday feel</span><strong>Flexible</strong></div><button class="btn small ghost planJump" data-plan="v3" type="button" style="margin-top:10px">Use Northern Wildlife</button></div>
       </div>
       <div class="mapWrap"><div id="overviewMap" style="height:460px;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#0c1613"></div></div>
-      <div class="mapLegend"><span><span class="legendLine" style="background:var(--v2)"></span>Grand Prismatic</span><span><span class="legendLine" style="background:var(--v3)"></span>Northern Wildlife</span><span><span class="legendDot" style="background:var(--gold)"></span>Shared Friday: Hayden Valley</span></div>
+      <div class="mapLegend"><span><span class="legendLine" style="background:var(--v2)"></span>Grand Prismatic</span><span><span class="legendLine" style="background:var(--v3)"></span>Northern Wildlife</span><span><span class="legendDot" style="background:var(--stop-wildlife)"></span>Shared Friday: Hayden Valley</span></div>
       <div class="card" style="margin-top:10px;overflow-x:auto">
         <table class="compare">
           <thead><tr><th>Destination / area</th><th>Grand Prismatic</th><th>Northern Wildlife</th></tr></thead>
@@ -187,7 +191,7 @@
           <span class="status"><span class="dot" id="condNetworkDot"></span><span id="condNetworkText">Network</span></span>
           <span class="status"><span class="dot blue"></span><span id="lastRoadSync">Road data: manual check</span></span>
         </div>
-        <div class="conditionBanner"><div class="conditionIcon">ⓘ</div><div class="conditionText"><strong>App 2.2 does not claim live road/weather data yet.</strong><p>Use the official-condition links below, then choose the matching Flexible Conditions scenario. Live-data integration can be added after the core app is tested.</p></div></div>
+        <div class="conditionBanner"><div class="conditionIcon">ⓘ</div><div class="conditionText"><strong>App 2.3 does not claim live road/weather data yet.</strong><p>Use the official-condition links below, then choose the matching Flexible Conditions scenario. Live-data integration can be added after the core app is tested.</p></div></div>
         <div class="sectionTitle" style="margin-top:14px"><h2 style="font-size:14px">Flexible Conditions scenario</h2><span>changes fallback route + priorities</span></div>
         <div class="seg" id="scenarioSeg">
           <button type="button" data-scenario="normal" class="active">Normal</button>
@@ -242,7 +246,7 @@
       <div class="sectionTitle"><h2>Checklist</h2><span>tap to complete</span></div>
       <div class="card"><div class="checkList" id="checkList"></div><form class="addRow" id="addCheckForm"><input id="addCheckInput" maxlength="60" placeholder="Add a checklist item…" aria-label="New checklist item"><button class="btn small" type="submit">Add</button></form></div>
       <div class="sectionTitle"><h2>Offline status</h2><span>PWA shell + viewed map resources</span></div>
-      <div class="card smallText muted" style="line-height:1.55">The itinerary, checklists, wildlife log and fallback route data are stored locally. The service worker caches the app shell and map resources as you use them. A future version can package a dedicated Yellowstone/Grand Teton offline basemap for more complete zero-signal coverage. App 2.2 also stores the selected Saturday module locally.</div>
+      <div class="card smallText muted" style="line-height:1.55">The itinerary, checklists, wildlife log and fallback route data are stored locally. The service worker caches the app shell and map resources as you use them. A future version can package a dedicated Yellowstone/Grand Teton offline basemap for more complete zero-signal coverage. App 2.3 also stores the selected Saturday module locally.</div>
     </section>
   </main>
 
@@ -461,18 +465,18 @@
   function ensureMapSources(m,prefix){
     m.addSource(prefix+'-route',{type:'geojson',data:emptyFC()});
     m.addLayer({id:prefix+'-route-casing',type:'line',source:prefix+'-route',paint:{'line-color':'#08100d','line-width':8,'line-opacity':.75}});
-    m.addLayer({id:prefix+'-route-line',type:'line',source:prefix+'-route',paint:{'line-color':prefix==='main'?planColor(state.plan):'#65aaf7','line-width':4.5,'line-opacity':.95}});
+    m.addLayer({id:prefix+'-route-line',type:'line',source:prefix+'-route',paint:{'line-color':prefix==='main'?planColor(state.plan):'#4c8dff','line-width':4.5,'line-opacity':.95}});
     m.addSource(prefix+'-trail',{type:'geojson',data:emptyFC()});
     m.addLayer({id:prefix+'-trail-line',type:'line',source:prefix+'-trail',paint:{'line-color':'#b99cff','line-width':3,'line-dasharray':[2,2],'line-opacity':.95}});
     m.addSource(prefix+'-stops',{type:'geojson',data:emptyFC()});
-    m.addLayer({id:prefix+'-stop-circles',type:'circle',source:prefix+'-stops',paint:{'circle-radius':['interpolate',['linear'],['zoom'],6,4,10,7,14,10],'circle-color':['case',['==',['get','cat'],'Wildlife'],'#e1b85b',['==',['get','cat'],'Wildlife / thermal'],'#e1b85b','#f3f5f2'],'circle-stroke-color':'#0a120f','circle-stroke-width':2}});
+    m.addLayer({id:prefix+'-stop-circles',type:'circle',source:prefix+'-stops',paint:{'circle-radius':['interpolate',['linear'],['zoom'],6,4,10,7,14,10],'circle-color':['case',['==',['get','cat'],'Wildlife'],'#fbbf24',['==',['get','cat'],'Wildlife / thermal'],'#fbbf24',['==',['get','cat'],'Wildlife / scenic'],'#fbbf24','#f3f5f2'],'circle-stroke-color':'#0a120f','circle-stroke-width':2}});
     m.addLayer({id:prefix+'-stop-labels',type:'symbol',source:prefix+'-stops',minzoom:8.5,layout:{'text-field':['get','name'],'text-size':11,'text-offset':[0,1.15],'text-anchor':'top','text-allow-overlap':false},paint:{'text-color':'#f2f5f1','text-halo-color':'#0a120f','text-halo-width':1.5}});
     if(prefix==='main'){
       m.on('click','main-stop-circles',ev=>{if(ev.features&&ev.features[0]) selectStop(ev.features[0].properties.key,false);});
       m.on('mouseenter','main-stop-circles',()=>m.getCanvas().style.cursor='pointer'); m.on('mouseleave','main-stop-circles',()=>m.getCanvas().style.cursor='');
     }
   }
-  function planColor(plan){return plan==='v2'?'#65aaf7':plan==='v3'?'#71d09e':'#e1b85b';}
+  function planColor(plan){return plan==='v2'?'#4c8dff':plan==='v3'?'#65d69d':'#fb923c';}
   function routeKeysFor(plan,day){
     if(day==='sat') return [...saturdayPlans[state.saturday].route];
     let keys=[...(routeKeys[plan]?.[day]||[])];
@@ -508,7 +512,10 @@
     renderDayBars(); if(!mainMapLoaded){initMap();return;} const plan=state.plan,day=state.mapDay,satAtRender=state.saturday;
     const label=day==='sat'?`Saturday · ${saturdayPlans[state.saturday].name}`:`${itineraries[plan].short} · ${dayButtons.find(d=>d[0]===day)[1]}`;
     $('#mapRouteLabel').textContent=label;
-    map.setPaintProperty('main-route-line','line-color',day==='sat'?'#b99cff':planColor(plan));
+    const routeColor=day==='sat'?'#b99cff':planColor(plan);
+    map.setPaintProperty('main-route-line','line-color',routeColor);
+    $('#routeLegendLine').style.background=routeColor;
+    $('#routeLegendText').textContent=day==='sat'?`${saturdayPlans[state.saturday].name} route`:`${itineraries[plan].name} route`;
     map.getSource('main-stops').setData(stopGeo(plan,day)); map.getSource('main-trail').setData(trailGeo(day)); map.getSource('main-route').setData(straightRouteGeo(plan,day));
     const fit=mapFitPoints(plan,day); fitCoords(map,fit);
     $('#satTrailLegend').style.display=(day==='sat'&&trailPoints(day).length>1)?'inline':'none';
@@ -529,7 +536,7 @@
 
   function gpsClass(){ if(!state.gps.ts)return 'lost'; const age=(Date.now()-state.gps.ts)/1000; if(age>120)return 'lost'; if(age>25||state.gps.accuracy>80)return 'stale'; return 'live'; }
   function gpsLabel(){ const c=gpsClass(); if(!state.gps.ts)return 'GPS not started'; const age=Math.round((Date.now()-state.gps.ts)/1000); if(c==='live')return `GPS live · ±${Math.round(state.gps.accuracy)} m`; if(c==='stale')return `GPS weak · ${age}s old`; return `Last fix · ${Math.max(1,Math.round(age/60))}m old`; }
-  function updateGpsUi(){ const c=gpsClass(), dot=$('#gpsDot'); if(dot){dot.className='dot '+(c==='live'?'blue':c==='stale'?'warn':''); $('#gpsText').textContent=gpsLabel();} if(state.gps.marker){const el=state.gps.marker.getElement();el.className='gpsMarker '+(c==='stale'?'stale':c==='lost'?'lost':'');} }
+  function updateGpsUi(){ const c=gpsClass(), dot=$('#gpsDot'); if(dot){dot.className='dot '+(c==='live'?'gpsLive':c==='stale'?'gpsStale':''); $('#gpsText').textContent=gpsLabel();} if(state.gps.marker){const el=state.gps.marker.getElement();el.className='gpsMarker '+(c==='stale'?'stale':c==='lost'?'lost':'');} }
   function startGps(center=true){ if(!navigator.geolocation){toast('Geolocation is not supported on this device.');return;} if(state.gps.watchId!==null){ if(center&&state.gps.lng!==null)map?.flyTo({center:[state.gps.lng,state.gps.lat],zoom:12}); return; }
     state.gps.status='starting'; toast('Requesting location permission…');
     state.gps.watchId=navigator.geolocation.watchPosition(pos=>{state.gps.lng=pos.coords.longitude;state.gps.lat=pos.coords.latitude;state.gps.accuracy=pos.coords.accuracy;state.gps.ts=Date.now(); if(!state.gps.marker&&map){const el=document.createElement('div');el.className='gpsMarker';state.gps.marker=new maplibregl.Marker({element:el,anchor:'center'}).setLngLat([state.gps.lng,state.gps.lat]).addTo(map);} else state.gps.marker?.setLngLat([state.gps.lng,state.gps.lat]); updateGpsUi(); if(center){map?.flyTo({center:[state.gps.lng,state.gps.lat],zoom:12}); center=false;} },err=>{state.gps.status='error';updateGpsUi();toast(err.code===1?'Location permission was denied.':'Could not update current position.');},{enableHighAccuracy:true,maximumAge:5000,timeout:15000});

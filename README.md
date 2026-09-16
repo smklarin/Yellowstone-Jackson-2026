@@ -1,6 +1,18 @@
-# Yellowstone + Jackson Trip Companion — App 2.2
+# Yellowstone + Jackson Trip Companion — App 2.3
 
 Mobile-first static PWA for the Sept. 23–27, 2026 Yellowstone / Jackson trip.
+
+
+## What changed in App 2.3
+
+App 2.3 cleans up map color semantics so every important map element is visually distinct:
+
+- The selected-route legend now changes color dynamically to match the active itinerary: blue for Grand Prismatic, green for Northern Wildlife, orange for Flexible Conditions, and purple for Saturday routes.
+- Live GPS is now teal rather than blue, so it cannot be confused with the Grand Prismatic route.
+- Stale GPS is now pink/magenta rather than yellow/gold, so it cannot be confused with wildlife-focused destination pins.
+- Last-known GPS remains gray.
+- Wildlife-focused stops are gold and other destination pins are white, and both are now explicitly identified in the map legend.
+- The Saturday dashed lift/boat/hike line remains purple and only appears in the legend when relevant.
 
 ## What changed in App 2.2
 
@@ -88,7 +100,7 @@ Geolocation requires HTTPS; GitHub Pages satisfies this.
 
 - The route display is a planning aid, **not a turn-by-turn navigation system**.
 - Yellowstone NPS warns that consumer navigation systems can send visitors onto closed or inappropriate roads. Always use official NPS road status for final driving decisions.
-- App 2.2 caches map resources that have already been viewed. It does **not yet ship a complete offline Yellowstone/Grand Teton basemap**.
+- App 2.3 caches map resources that have already been viewed. It does **not yet ship a complete offline Yellowstone/Grand Teton basemap**.
 - Current GPS position can continue to update without cellular data because GPS and network connectivity are separate. iOS may pause a web app while it is backgrounded or the phone is locked.
 - Saturday trail/lift geometry is deliberately labeled schematic; follow official signs and current trail conditions.
 
