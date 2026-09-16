@@ -1,4 +1,4 @@
-const VERSION='yj-trip-v2.1.0';
+const VERSION='yj-trip-v2.2.0';
 const SHELL=[
   './','./index.html','./manifest.webmanifest','./icon-180.png','./icon-512.png'
 ];

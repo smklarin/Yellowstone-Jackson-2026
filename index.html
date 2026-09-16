@@ -52,8 +52,8 @@
     .nextName{font-size:24px;font-weight:850;letter-spacing:-.04em;margin-top:3px}
     .timeBig{font-size:30px;font-weight:900;letter-spacing:-.04em;margin-top:6px;color:var(--gold)}
     .deadline{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--line);font-size:13px}.deadline:first-of-type{margin-top:9px}
-    .dayBar{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin:4px 0 12px;scrollbar-width:none}.dayBar::-webkit-scrollbar{display:none}
-    .dayBtn{min-width:76px;background:#0d1915;border:1px solid var(--line);color:var(--muted);padding:8px 10px;border-radius:13px;font-weight:750;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}.dayBtn .dayDow{font-size:11px;text-transform:uppercase;letter-spacing:.05em}.dayBtn .dayNum{font-size:16px;font-weight:900;margin-top:4px}.dayBtn.active{background:var(--text);color:#09110e;border-color:var(--text)}
+    .dayBar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;padding-bottom:4px;margin:4px 0 12px}.dayBar::-webkit-scrollbar{display:none}
+    .dayBtn{min-width:0;width:100%;background:#0d1915;border:1px solid var(--line);color:var(--muted);padding:8px 4px;border-radius:13px;font-weight:750;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}.dayBtn .dayDow{font-size:11px;text-transform:uppercase;letter-spacing:.05em}.dayBtn .dayNum{font-size:16px;font-weight:900;margin-top:4px}.dayBtn.active{background:var(--text);color:#09110e;border-color:var(--text)}
     .sectionTitle{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:17px 2px 9px}.sectionTitle h2{font-size:17px;margin:0}.sectionTitle span{font-size:12px;color:var(--muted)}
     .timeline{display:grid;gap:8px}
     .event{display:grid;grid-template-columns:68px 18px minmax(0,1fr);gap:8px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:15px;padding:11px}
@@ -89,13 +89,13 @@
 <body>
 <div class="app" id="app">
   <header class="header">
-    <div class="eyebrow">Yellowstone + Jackson · App 2.1</div>
+    <div class="eyebrow">Yellowstone + Jackson · App 2.2</div>
     <div class="titleRow"><h1>Trip Companion</h1><div class="dates">Sep 23–27, 2026</div></div>
     <div class="planRow">
       <select id="planSelect" aria-label="Selected itinerary">
-        <option value="v2">V2 — Grand Prismatic</option>
-        <option value="v3" selected>V3 — Northern Wildlife</option>
-        <option value="v4">V4 — Flexible Conditions</option>
+        <option value="v2">Grand Prismatic</option>
+        <option value="v3" selected>Northern Wildlife</option>
+        <option value="v4">Flexible Conditions</option>
       </select>
       <button class="btn" id="overviewBtn" type="button">Overview</button>
     </div>
@@ -123,7 +123,7 @@
       </div>
 
       <div class="satModule" id="saturdayModule">
-        <div class="sectionTitle"><h2>Saturday Module</h2><span>independent of V2 / V3 / V4</span></div>
+        <div class="sectionTitle"><h2>Saturday Module</h2><span>independent of Yellowstone plan</span></div>
         <div class="satChoiceGrid" id="satChoiceGrid"></div>
         <div class="card satDetail" id="satDetail"></div>
       </div>
@@ -136,7 +136,7 @@
       <div class="dayBar" id="mapDayBar"></div>
       <div class="mapWrap">
         <div class="mapTop">
-          <div class="mapPill" id="mapRouteLabel">V3 · Thu route</div>
+          <div class="mapPill" id="mapRouteLabel">Northern Wildlife · Thu route</div>
           <div class="mapTools">
             <button id="locateBtn" type="button" title="Use current location" aria-label="Use current location">⌖</button>
             <button id="fitBtn" type="button" title="Fit route" aria-label="Fit route">↙</button>
@@ -156,16 +156,16 @@
     </section>
 
     <section class="view" id="overviewView">
-      <div class="sectionTitle"><h2>Yellowstone plan overview</h2><span>V2 vs V3 only</span></div>
+      <div class="sectionTitle"><h2>Yellowstone plan overview</h2><span>compare the two sightseeing plans</span></div>
       <div class="overviewGrid">
-        <div class="card planCard v2"><div class="planName">V2 · Grand Prismatic</div><div class="planDesc">Wildlife morning plus the iconic geothermal overlook. More cross-park movement and a firmer Thursday clock.</div><div class="metric"><span>Lamar target</span><strong>~3 hours</strong></div><div class="metric"><span>Thursday feel</span><strong>Balanced</strong></div><button class="btn small ghost planJump" data-plan="v2" type="button" style="margin-top:10px">Use V2</button></div>
-        <div class="card planCard v3"><div class="planName">V3 · Northern Wildlife</div><div class="planDesc">Keeps the day concentrated in the northern range so excellent wildlife sightings can win over the schedule.</div><div class="metric"><span>Lamar target</span><strong>3½–4+ hours</strong></div><div class="metric"><span>Thursday feel</span><strong>Flexible</strong></div><button class="btn small ghost planJump" data-plan="v3" type="button" style="margin-top:10px">Use V3</button></div>
+        <div class="card planCard v2"><div class="planName">Grand Prismatic</div><div class="planDesc">Wildlife morning plus the iconic geothermal overlook. More cross-park movement and a firmer Thursday clock.</div><div class="metric"><span>Lamar target</span><strong>~3 hours</strong></div><div class="metric"><span>Thursday feel</span><strong>Balanced</strong></div><button class="btn small ghost planJump" data-plan="v2" type="button" style="margin-top:10px">Use Grand Prismatic</button></div>
+        <div class="card planCard v3"><div class="planName">Northern Wildlife</div><div class="planDesc">Keeps the day concentrated in the northern range so excellent wildlife sightings can win over the schedule.</div><div class="metric"><span>Lamar target</span><strong>3½–4+ hours</strong></div><div class="metric"><span>Thursday feel</span><strong>Flexible</strong></div><button class="btn small ghost planJump" data-plan="v3" type="button" style="margin-top:10px">Use Northern Wildlife</button></div>
       </div>
       <div class="mapWrap"><div id="overviewMap" style="height:460px;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#0c1613"></div></div>
-      <div class="mapLegend"><span><span class="legendLine" style="background:var(--v2)"></span>V2</span><span><span class="legendLine" style="background:var(--v3)"></span>V3</span><span><span class="legendDot" style="background:var(--gold)"></span>Shared Friday: Hayden Valley</span></div>
+      <div class="mapLegend"><span><span class="legendLine" style="background:var(--v2)"></span>Grand Prismatic</span><span><span class="legendLine" style="background:var(--v3)"></span>Northern Wildlife</span><span><span class="legendDot" style="background:var(--gold)"></span>Shared Friday: Hayden Valley</span></div>
       <div class="card" style="margin-top:10px;overflow-x:auto">
         <table class="compare">
-          <thead><tr><th>Destination / area</th><th>V2</th><th>V3</th></tr></thead>
+          <thead><tr><th>Destination / area</th><th>Grand Prismatic</th><th>Northern Wildlife</th></tr></thead>
           <tbody>
             <tr><td>Slough Creek / Lamar / Soda Butte</td><td class="yes">✓</td><td class="yes">✓</td></tr>
             <tr><td>Tower area</td><td class="yes">✓</td><td class="yes">✓</td></tr>
@@ -181,14 +181,14 @@
     </section>
 
     <section class="view" id="conditionsView">
-      <div class="sectionTitle"><h2>Conditions + V4</h2><span>Manual fallback logic in app 2.0</span></div>
+      <div class="sectionTitle"><h2>Conditions + Flexible Plan</h2><span>manual fallback logic</span></div>
       <div class="card">
         <div class="statusRow" style="margin-top:0">
           <span class="status"><span class="dot" id="condNetworkDot"></span><span id="condNetworkText">Network</span></span>
           <span class="status"><span class="dot blue"></span><span id="lastRoadSync">Road data: manual check</span></span>
         </div>
-        <div class="conditionBanner"><div class="conditionIcon">ⓘ</div><div class="conditionText"><strong>App 2.0 does not claim live road/weather data yet.</strong><p>Use the official-condition links below, then choose the matching V4 scenario. Live-data integration can be added after the core app is tested.</p></div></div>
-        <div class="sectionTitle" style="margin-top:14px"><h2 style="font-size:14px">V4 scenario</h2><span>changes fallback route + priorities</span></div>
+        <div class="conditionBanner"><div class="conditionIcon">ⓘ</div><div class="conditionText"><strong>App 2.2 does not claim live road/weather data yet.</strong><p>Use the official-condition links below, then choose the matching Flexible Conditions scenario. Live-data integration can be added after the core app is tested.</p></div></div>
+        <div class="sectionTitle" style="margin-top:14px"><h2 style="font-size:14px">Flexible Conditions scenario</h2><span>changes fallback route + priorities</span></div>
         <div class="seg" id="scenarioSeg">
           <button type="button" data-scenario="normal" class="active">Normal</button>
           <button type="button" data-scenario="poor">Poor Weather</button>
@@ -204,9 +204,9 @@
         </div>
       </div>
       <div class="card" style="margin-top:10px">
-        <h3>V4 principles</h3>
+        <h3>Flexible Conditions principles</h3>
         <div class="smallText muted" style="line-height:1.55;margin-top:8px">Protect hard commitments first. Keep Lamar when access and visibility make sense. Use Mammoth as the primary northern fallback hub. Cancel Hayden and Grand Teton bonus stops before risking Friday's wedding timing. Never let the app auto-switch plans without asking you.</div>
-        <button class="btn primary" id="switchV4" type="button" style="margin-top:12px;width:100%">Switch selected itinerary to V4</button>
+        <button class="btn primary" id="switchV4" type="button" style="margin-top:12px;width:100%">Switch to Flexible Conditions</button>
       </div>
     </section>
 
@@ -242,7 +242,7 @@
       <div class="sectionTitle"><h2>Checklist</h2><span>tap to complete</span></div>
       <div class="card"><div class="checkList" id="checkList"></div><form class="addRow" id="addCheckForm"><input id="addCheckInput" maxlength="60" placeholder="Add a checklist item…" aria-label="New checklist item"><button class="btn small" type="submit">Add</button></form></div>
       <div class="sectionTitle"><h2>Offline status</h2><span>PWA shell + viewed map resources</span></div>
-      <div class="card smallText muted" style="line-height:1.55">The itinerary, checklists, wildlife log and fallback route data are stored locally. The service worker caches the app shell and map resources as you use them. A future version can package a dedicated Yellowstone/Grand Teton offline basemap for more complete zero-signal coverage. App 2.0 also stores the selected Saturday module locally.</div>
+      <div class="card smallText muted" style="line-height:1.55">The itinerary, checklists, wildlife log and fallback route data are stored locally. The service worker caches the app shell and map resources as you use them. A future version can package a dedicated Yellowstone/Grand Teton offline basemap for more complete zero-signal coverage. App 2.2 also stores the selected Saturday module locally.</div>
     </section>
   </main>
 
@@ -319,20 +319,20 @@
   const E = (id,time,name,place,priority,note,hard=false) => ({id,time,name,place,priority,note,hard});
   const sharedDays = {
     wed:[E('w1','1:30 PM','Land at IDA','ida','fixed','Pick up rental car.',true),E('w2','~4:15 PM','Gray Wolf Inn check-in','gray','high','Two-night Yellowstone base.'),E('w3','~4:30 PM','Grizzly & Wolf Discovery Center','discovery','high','Go if flight/rental timing cooperates.'),E('w4','Evening','Dinner + fuel + stage gear',null,'high','Set out layers, binoculars, snacks and morning gear.')],
-    fri:[E('f1','5:15 AM','Depart Gray Wolf Inn','gray','must','Second dawn wildlife day.'),E('f2','~6:40–8:30','Hayden Valley wildlife','hayden','high','Keep flexible; V4 cancels this first if Friday travel becomes uncertain.'),E('f3','Late morning','Oxbow Bend','oxbow','optional','North-to-south Teton sightseeing.'),E('f4','Midday','Snake River Overlook','snake','optional','Quick scenic stop.'),E('f5','Midday','Schwabacher Landing','schwab','optional','Scenic/wildlife stop if timing allows.'),E('f6','Afternoon','Jenny Lake','jenny','optional','Optional hike / lake stop.'),E('f7','~4–5 PM','Teton Mountain Lodge','teton','high','Check in, reset and get ready.'),E('f8','7:15 PM','Wedding-event shuttle','teton','fixed','Hard deadline.',true)],
+    fri:[E('f1','5:15 AM','Depart Gray Wolf Inn','gray','must','Second dawn wildlife day.'),E('f2','~6:40–8:30','Hayden Valley wildlife','hayden','high','Keep flexible; the Flexible Conditions plan cancels this first if Friday travel becomes uncertain.'),E('f3','Late morning','Oxbow Bend','oxbow','optional','North-to-south Teton sightseeing.'),E('f4','Midday','Snake River Overlook','snake','optional','Quick scenic stop.'),E('f5','Midday','Schwabacher Landing','schwab','optional','Scenic/wildlife stop if timing allows.'),E('f6','Afternoon','Jenny Lake','jenny','optional','Optional hike / lake stop.'),E('f7','~4–5 PM','Teton Mountain Lodge','teton','high','Check in, reset and get ready.'),E('f8','7:15 PM','Wedding-event shuttle','teton','fixed','Hard deadline.',true)],
     sat:[],
-    sun:[E('u1','~9:00 AM','Leave Teton Village','teton','fixed','V4 may move this earlier for weather/roads.',true),E('u2','~12:00 PM','Return rental car at IDA','ida','fixed','Target buffer before flight.',true),E('u3','2:01 PM','Flight departs','ida','fixed','Hard deadline.',true)]
+    sun:[E('u1','~9:00 AM','Leave Teton Village','teton','fixed','The Flexible Conditions plan may move this earlier for weather/roads.',true),E('u2','~12:00 PM','Return rental car at IDA','ida','fixed','Target buffer before flight.',true),E('u3','2:01 PM','Flight departs','ida','fixed','Hard deadline.',true)]
   };
   const thuV2 = [E('t1','5:00 AM','Depart Gray Wolf Inn','gray','must','Fuel the night before.'),E('t2','~7:00 AM','Slough Creek → Lamar','slough','must','Start wildlife session near first light.'),E('t3','7:00–10:00','Lamar Valley / Soda Butte','lamar','must','Primary wildlife window. Wolves and bears may be distant.'),E('t4','~10:30 AM','Tower Fall','towerFall','high','Short overlook stop.'),E('t5','~11:30 AM','Mammoth Hot Springs','mammoth','high','Elk + terraces + lunch / visitor services.'),E('t6','~2:45–4:15','Grand Prismatic Overlook','prismatic','high','Iconic geothermal stop; tighter clock.'),E('t7','~5:00 PM','Back at Gray Wolf','gray','high','Dinner + rest.')];
   const thuV3 = [E('t1','5:00 AM','Depart Gray Wolf Inn','gray','must','Fuel the night before.'),E('t2','~7:00 AM','Slough Creek → Lamar','slough','must','Start wildlife session near first light.'),E('t3','7:00–10:30+','Lamar Valley / Soda Butte','lamar','must','If the wildlife is excellent, stay. Optional stops give way.'),E('t4','~11:15 AM','Tower Fall','towerFall','high','Short overlook stop.'),E('t5','~11:40 AM','Calcite Springs','calcite','optional','Quick overlook; possible bighorn sheep.'),E('t6','~12:45 PM','Wraith / Undine Falls','undine','optional','Skip if behind or wildlife ran long.'),E('t7','~1:30–3:30','Mammoth Hot Springs','mammoth','high','Elk + terraces + lunch / visitor services.'),E('t8','~5:00 PM','Back at Gray Wolf','gray','high','Relaxed evening.')];
   const thuV4 = [E('t1','Before dawn','Check conditions first','gray','must','Do not commit to Dunraven until road/weather status is acceptable.'),E('t2','Morning','Northern route via Norris / Mammoth','mammoth','high','Weather-resistant approach to the northern range.'),E('t3','Late morning','Tower / Lamar if practical','lamar','high','Only when access + visibility make the drive worthwhile.'),E('t4','Afternoon','Fallback stops as conditions allow','norris','optional','Norris, Mammoth and West Yellowstone are the primary fallback anchors.'),E('t5','Evening','Back at Gray Wolf','gray','high','Recheck Friday southbound conditions.')];
   const itineraries = {
-    v2:{name:'V2 — Grand Prismatic',short:'Grand Prismatic',subtitle:'Wildlife + geothermal',days:{...sharedDays,thu:thuV2}},
-    v3:{name:'V3 — Northern Wildlife',short:'Northern Wildlife',subtitle:'Wildlife first',days:{...sharedDays,thu:thuV3}},
-    v4:{name:'V4 — Flexible Conditions',short:'Flexible Conditions',subtitle:'Weather / closure resistant',days:{...sharedDays,thu:thuV4}}
+    v2:{name:'Grand Prismatic',short:'Grand Prismatic',subtitle:'Wildlife + geothermal',days:{...sharedDays,thu:thuV2}},
+    v3:{name:'Northern Wildlife',short:'Northern Wildlife',subtitle:'Wildlife first',days:{...sharedDays,thu:thuV3}},
+    v4:{name:'Flexible Conditions',short:'Flexible Conditions',subtitle:'Weather / closure resistant',days:{...sharedDays,thu:thuV4}}
   };
 
-  // Saturday is intentionally independent of the Yellowstone V2/V3/V4 plan selector.
+  // Saturday is intentionally independent of the Yellowstone plan selector.
   const saturdayPlans = {
     high:{
       name:'High Alpine', icon:'🏔️', sub:'Tram + Top of the World + Rock Springs',
@@ -552,7 +552,7 @@
   function escapeHtml(s){return s.replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 
   const scenarioText={
-    normal:['✓','Normal conditions','Use the selected sightseeing plan. V4 remains available but does not need to replace V2/V3.'],
+    normal:['✓','Normal conditions','Use the selected sightseeing plan. Flexible Conditions remains available if conditions change.'],
     poor:['🌧','Poor weather','Prefer the lower / northern approach via Norris and Mammoth. Keep Lamar only if visibility makes wildlife viewing worthwhile.'],
     snow:['❄','Snow / ice','Reduce pre-dawn driving. Use Mammoth/Norris as the safe fallback core and avoid forcing high-elevation sightseeing.'],
     closure:['🚧','Road closure','Use the northern alternate for Lamar when possible. On Friday, protect the Jackson arrival and use the Idaho route if Yellowstone southbound travel is unavailable.'],
@@ -566,7 +566,7 @@
   $('#overviewBtn').addEventListener('click',()=>showView('overviewView')); $('#overviewBack').addEventListener('click',()=>showView('dashboardView')); $$('.planJump').forEach(b=>b.addEventListener('click',()=>{state.plan=b.dataset.plan;$('#planSelect').value=state.plan;save();renderDashboard();showView('dashboardView');toast(`Selected ${itineraries[state.plan].name}`);}));
   $$('.navBtn').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
   $('#locateBtn').addEventListener('click',()=>startGps(true)); $('#fitBtn').addEventListener('click',()=>fitCoords(map,mapFitPoints(state.plan,state.mapDay)));
-  $$('#scenarioSeg button').forEach(b=>b.addEventListener('click',()=>{state.scenario=b.dataset.scenario;renderScenario();})); $('#switchV4').addEventListener('click',()=>{state.plan='v4';$('#planSelect').value='v4';save();renderDashboard();if(mainMapLoaded)renderMapDay();toast('V4 selected.');});
+  $$('#scenarioSeg button').forEach(b=>b.addEventListener('click',()=>{state.scenario=b.dataset.scenario;renderScenario();})); $('#switchV4').addEventListener('click',()=>{state.plan='v4';$('#planSelect').value='v4';save();renderDashboard();if(mainMapLoaded)renderMapDay();toast('Flexible Conditions selected.');});
   $('#addCheckForm').addEventListener('submit',e=>{e.preventDefault();const inp=$('#addCheckInput');const text=inp.value.trim();if(!text)return;state.customChecks.push({id:'x'+Date.now(),text});inp.value='';save();renderChecks();});
   $('#addAnimalForm').addEventListener('submit',e=>{e.preventDefault();const inp=$('#addAnimalInput');const name=inp.value.trim().replace(/\s+/g,' ');if(!name)return;const exists=allSpecies().some(s=>s[2].toLowerCase()===name.toLowerCase());if(exists){toast(`${name} is already in the wildlife list.`);return;}state.customSpecies.push({id:'animal-'+Date.now(),name});inp.value='';save();renderWildlife();toast(`${name} added to the wildlife list.`);});
 
