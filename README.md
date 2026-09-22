@@ -1,12 +1,12 @@
-# Yellowstone + Jackson Trip Companion — App 2.4.1.1
+# Yellowstone + Jackson Trip Companion — App 2.5
 
 Mobile-first static PWA for the Sept. 23–27, 2026 Yellowstone / Jackson trip.
 
 
 
-## What changed in App 2.4.1.1
+## What changed in App 2.5
 
-App 2.4.1.1 adds small directional chevrons directly on the driving-route lines. They follow the route geometry so the map now shows the intended direction of travel around Yellowstone loops and on other driving segments. Direction arrows are also shown in the Grand Prismatic vs. Northern Wildlife Overview.
+App 2.5 adds small directional chevrons directly on the driving-route lines. They follow the route geometry so the map now shows the intended direction of travel around Yellowstone loops and on other driving segments. Direction arrows are also shown in the Grand Prismatic vs. Northern Wildlife Overview.
 
 ## What changed in App 2.3
 
@@ -105,7 +105,7 @@ Geolocation requires HTTPS; GitHub Pages satisfies this.
 
 - The route display is a planning aid, **not a turn-by-turn navigation system**.
 - Yellowstone NPS warns that consumer navigation systems can send visitors onto closed or inappropriate roads. Always use official NPS road status for final driving decisions.
-- App 2.4.1.1 caches map resources that have already been viewed. It does **not yet ship a complete offline Yellowstone/Grand Teton basemap**.
+- App 2.5 caches map resources that have already been viewed. It does **not yet ship a complete offline Yellowstone/Grand Teton basemap**.
 - Current GPS position can continue to update without cellular data because GPS and network connectivity are separate. iOS may pause a web app while it is backgrounded or the phone is locked.
 - Saturday trail/lift geometry is deliberately labeled schematic; follow official signs and current trail conditions.
 
@@ -115,3 +115,10 @@ Geolocation requires HTTPS; GitHub Pages satisfies this.
 - **Northern Wildlife:** longer Lamar flexibility + Tower / Calcite / optional Wraith-Undine + Mammoth, no Grand Prismatic.
 - **Flexible Conditions:** fallback logic for poor weather, snow/ice, closures and delays. It is intentionally excluded from the Overview comparison.
 - **Saturday Module:** High Alpine / Grand Teton / Local Trails, independent of the Yellowstone plan selector.
+
+
+## App 2.5 live conditions
+- Live National Weather Service point forecasts for West Yellowstone, Lamar Valley, Hayden Valley, and Teton Village.
+- Cached last-successful weather forecast for offline reference.
+- Embedded official NPS live road-status maps for Yellowstone and Grand Teton, with one-tap full-map fallback links.
+- Live conditions inform the existing Flexible Conditions workflow without automatically changing the selected itinerary.

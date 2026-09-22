@@ -1,4 +1,4 @@
-const VERSION='yj-trip-v2.4.1';
+const VERSION='yj-trip-v2.5';
 const SHELL=[
   './','./index.html','./manifest.webmanifest','./icon-180.png','./icon-512.png'
 ];
@@ -30,6 +30,19 @@ self.addEventListener('fetch',event=>{
           return res;
         })
         .catch(()=>caches.match('./index.html'))
+    );
+    return;
+  }
+
+  // Weather data should prefer the network so the Conditions tab stays fresh,
+  // while still falling back to the last response if connectivity disappears.
+  if(url.hostname==='api.weather.gov'){
+    event.respondWith(
+      fetch(event.request).then(res=>{
+        const copy=res.clone();
+        caches.open(VERSION).then(c=>c.put(event.request,copy)).catch(()=>{});
+        return res;
+      }).catch(()=>caches.match(event.request))
     );
     return;
   }
